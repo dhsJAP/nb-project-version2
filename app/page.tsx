@@ -175,7 +175,7 @@ export default async function HomePage() {
             className="text-2xl text-rose-800 italic tracking-wide"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
-            Lani&apos;s Nails
+            Trinh&apos;s Nails
           </span>
 
           <nav className="hidden md:flex items-center gap-8">
