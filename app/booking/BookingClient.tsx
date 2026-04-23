@@ -449,7 +449,7 @@ export default function BookingClient({ services }: { services: Service[] }) {
             className="text-2xl text-rose-800 italic tracking-wide"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
-            Lani&apos;s Nails
+            Trinh&apos;s Nails
           </Link>
           <Link href="/" className="text-sm text-stone-400 hover:text-rose-500 transition-colors">
             ← Trang chủ
@@ -689,7 +689,7 @@ export default function BookingClient({ services }: { services: Service[] }) {
                   ['Dịch vụ',  state.service?.name ?? '—'],
                   ['Ngày',     state.date ? formatDateVI(state.date) : '—'],
                   ['Giờ',      state.time ? formatTime(state.time)   : '—'],
-                  ['Thợ',      'Lani (Primary Artist)'],
+                  ['Thợ',      'Trinh (Primary Artist)'],
                   ['Thời gian', `${state.service?.duration_minutes ?? '—'} phút`],
                 ].map(([k, v]) => (
                   <div key={k} className="flex justify-between py-1.5 border-b border-stone-50">
@@ -771,8 +771,8 @@ export default function BookingClient({ services }: { services: Service[] }) {
               {[
                 ['📅 Ngày',    state.date ? formatDateVI(state.date) : ''],
                 ['🕐 Giờ',    state.time ? formatTime(state.time) : ''],
-                ['👩‍🎨 Thợ',   'Lani'],
-                ['📍 Địa chỉ','123 Nguyễn Huệ, Q.1, TP.HCM'],
+                ['👩‍🎨 Thợ',   'Trinh'],
+                ['📍 Địa chỉ','148 Nguyễn Huy Tự, phường Bắc Hà, TP.Hà Tĩnh'],
                 ['💳 Đã thanh toán', `$${payAmount}`],
               ].map(([k, v]) => (
                 <div key={k} className="flex justify-between py-2 border-b border-stone-50 text-sm last:border-0">
@@ -786,7 +786,7 @@ export default function BookingClient({ services }: { services: Service[] }) {
             <div className="bg-amber-50 border border-amber-100 rounded-xl px-5 py-4 text-sm text-amber-700 text-left max-w-sm mx-auto mb-8 space-y-1">
               <p>⏰ Vui lòng đến trước <strong>5 phút</strong>.</p>
               <p>❌ Huỷ lịch ít nhất <strong>24 giờ</strong> trước để được hoàn cọc.</p>
-              <p>📞 Liên hệ: <strong>0901 234 567</strong></p>
+              <p>📞 Liên hệ: <strong>091 255 4570</strong></p>
             </div>
 
             <div className="flex gap-3 justify-center">

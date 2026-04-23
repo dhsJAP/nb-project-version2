@@ -2,6 +2,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getSupabase } from '@/lib/supabase'
+import { Navbar } from '@/components/Navbar'
+import { Hero } from '@/components/Hero'
+import { About } from '@/components/About'
+import { Services } from '@/components/Services'
+import { Portfolio } from '@/components/portfolio'
 
 
 
@@ -73,7 +78,8 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-function ServiceCard({ service }: { service: Service }) {
+
+export function ServiceCard({ service }: { service: Service }) {
   return (
     <div className="group relative bg-white border border-rose-100 rounded-2xl p-6 hover:border-rose-300 hover:shadow-lg transition-all duration-300">
       <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
@@ -103,7 +109,7 @@ function ServiceCard({ service }: { service: Service }) {
   )
 }
 
-function ReviewCard({ review }: { review: Review }) {
+export function ReviewCard({ review }: { review: Review }) {
   const initials = review.author
     .split(' ')
     .map((w) => w[0])
@@ -135,14 +141,7 @@ function ReviewCard({ review }: { review: Review }) {
   )
 }
 
-const PORTFOLIO_ITEMS = [
-  { label: 'Rose Bloom',   bg: 'from-rose-200 to-rose-400' },
-  { label: 'Sky Blue',     bg: 'from-sky-200 to-sky-400' },
-  { label: 'Mint Fresh',   bg: 'from-emerald-200 to-emerald-400' },
-  { label: 'Autumn Gold',  bg: 'from-amber-200 to-amber-400' },
-  { label: 'Lavender',     bg: 'from-purple-200 to-purple-400' },
-  { label: 'Nude Latte',   bg: 'from-stone-200 to-stone-400' },
-]
+
 
 const FALLBACK_SERVICES: Service[] = [
   { id: '1', name: 'Gel Manicure',    description: 'Tạo hình, chăm sóc cuticle, sơn gel bền màu đến 3 tuần.', duration_minutes: 45, price: 45 },
@@ -169,263 +168,30 @@ export default async function HomePage() {
     <main className="min-h-screen bg-[#fdf8f5]">
 
       {/* ── NAVBAR ── */}
-      <header className="sticky top-0 z-50 bg-[#fdf8f5]/90 backdrop-blur-sm border-b border-rose-100">
-        <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
-          <span
-            className="text-2xl text-rose-800 italic tracking-wide"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
-            Trinh&apos;s Nails
-          </span>
-
-          <nav className="hidden md:flex items-center gap-8">
-            {[
-              { href: '/',          label: 'Trang chủ' },
-              { href: '#services',  label: 'Bảng giá'  },
-              { href: '#reviews',   label: 'Đánh giá'  },
-            ].map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className="text-sm text-stone-500 hover:text-rose-600 transition-colors"
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
-
-          <Link
-            href="/booking"
-            className="bg-rose-500 hover:bg-rose-600 text-white text-sm px-5 py-2.5 rounded-full transition-colors font-medium"
-          >
-            Đặt lịch
-          </Link>
-        </div>
-      </header>
+      <Navbar />
 
       {/* ── HERO ── */}
-      <section className="relative min-h-[88vh] flex items-center overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: 'repeating-linear-gradient(45deg,#c8727a 0,#c8727a 1px,transparent 0,transparent 50%)',
-            backgroundSize: '20px 20px',
-          }}
-        />
-        <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-rose-100 to-pink-50 blur-3xl opacity-60" />
-        <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-gradient-to-tr from-amber-50 to-rose-50 blur-3xl opacity-50" />
-
-        <div className="relative z-10 max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center py-24">
-          {/* Copy */}
-          <div>
-            <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-5">
-              Premium Nail Studio
-            </p>
-            <h1
-              className="text-5xl md:text-6xl leading-[1.1] text-stone-800 mb-6"
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
-            >
-              Sự Tinh Tế
-              <br />
-              Trên{' '}
-              <em className="text-rose-600 not-italic">Đôi Tay</em>
-              <br />
-              Của Bạn.
-            </h1>
-            <p className="text-stone-500 leading-relaxed mb-8 max-w-md text-base">
-              Đặt lịch ngay để trải nghiệm dịch vụ chăm sóc móng cá nhân
-              chuyên nghiệp — nơi mỗi bộ móng là một tác phẩm nghệ thuật.
-            </p>
-            <div className="flex gap-3 flex-wrap">
-              <Link
-                href="/booking"
-                className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide"
-              >
-                ĐẶT LỊCH NGAY
-              </Link>
-              <Link
-                href="#services"
-                className="border border-rose-200 text-rose-600 hover:bg-rose-50 px-8 py-3.5 rounded-full font-medium transition-colors text-sm"
-              >
-                Xem bảng giá
-              </Link>
-            </div>
-            {/* Social proof */}
-            <div className="mt-10 flex items-center gap-4">
-              <div className="flex -space-x-2">
-                {['C', 'H', 'M'].map((l) => (
-                  <div
-                    key={l}
-                    className="w-8 h-8 rounded-full bg-rose-100 border-2 border-white flex items-center justify-center text-rose-500 text-xs font-semibold"
-                  >
-                    {l}
-                  </div>
-                ))}
-              </div>
-              <div>
-                <div className="flex gap-0.5 mb-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <span key={i} className="text-rose-400 text-xs">★</span>
-                  ))}
-                </div>
-                <p className="text-xs text-stone-400">200+ khách hàng hài lòng</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Hero image */}
-          <div className="relative hidden md:block">
-            <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden bg-gradient-to-br from-rose-200 via-pink-100 to-amber-100">
-              {/* Thay bằng ảnh thật: <Image src="/hero-nails.jpg" alt="Bộ móng nghệ thuật" fill className="object-cover" priority /> */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-9xl select-none">💅</span>
-              </div>
-              <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-lg">
-                <p className="text-xs text-stone-400">Next availability</p>
-                <p className="text-sm font-medium text-stone-700">Thứ 3, 12:00 PM</p>
-              </div>
-            </div>
-            <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-rose-50 border border-rose-100" />
-            <div className="absolute -bottom-6 -left-6 w-16 h-16 rounded-full bg-amber-50 border border-amber-100" />
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* ── ABOUT ── */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">
-          <div className="relative">
-            <div className="aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-rose-100 to-amber-50 max-w-sm relative">
-              {/* Thay bằng ảnh thật: <Image src="/lani-portrait.jpg" alt="Lani" fill className="object-cover" /> */}
-              <div className="absolute inset-0 flex items-center justify-center text-7xl">🌸</div>
-            </div>
-            <div className="absolute -bottom-4 -right-4 md:right-8 bg-rose-500 text-white rounded-2xl px-5 py-4 shadow-xl">
-              <p className="text-3xl font-bold leading-none">7+</p>
-              <p className="text-xs mt-1 opacity-80">Năm kinh nghiệm</p>
-            </div>
-          </div>
-
-          <div>
-            <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-4">Về chúng tôi</p>
-            <h2
-              className="text-4xl text-stone-800 mb-6 leading-tight"
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
-            >
-              Xin chào,
-              <br />
-              tôi là <em className="text-rose-600">TRÌNH</em>
-            </h2>
-            <p className="text-stone-500 leading-relaxed mb-4">
-              Với hơn 7 năm kinh nghiệm trong ngành nail art, tôi không chỉ
-              làm đẹp đôi tay — tôi tạo ra những tác phẩm nghệ thuật mang dấu
-              ấn cá nhân của từng khách hàng.
-            </p>
-            <p className="text-stone-500 leading-relaxed mb-8">
-              Mỗi buổi hẹn là một trải nghiệm thư giãn và sáng tạo. Tôi cam
-              kết dùng nguyên liệu cao cấp, an toàn và kỹ thuật tỉ mỉ nhất.
-            </p>
-            <div className="flex gap-6">
-              {[
-                { number: '500+', label: 'Lịch hẹn hoàn thành' },
-                { number: '4.9',  label: 'Điểm đánh giá'       },
-                { number: '100%', label: 'Nguyên liệu an toàn'  },
-              ].map(({ number, label }) => (
-                <div key={label}>
-                  <p
-                    className="text-2xl text-rose-600 leading-none"
-                    style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
-                  >
-                    {number}
-                  </p>
-                  <p className="text-xs text-stone-400 mt-1">{label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <About />
 
       {/* ── SERVICES ── */}
-      <section id="services" className="py-20 bg-[#fdf8f5]">
-        <div className="max-w-6xl mx-auto px-5">
-          <div className="text-center mb-12">
-            <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-3">Dịch vụ</p>
-            <h2
-              className="text-4xl text-stone-800"
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
-            >
-              Bảng Giá Dịch Vụ
-            </h2>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {displayServices.map((s) => <ServiceCard key={s.id} service={s} />)}
-          </div>
-
-          <div className="text-center mt-10">
-            <Link
-              href="/booking"
-              className="inline-block bg-rose-500 hover:bg-rose-600 text-white px-10 py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] text-sm"
-            >
-              Đặt lịch ngay
-            </Link>
-          </div>
-        </div>
-      </section>
+      <Services services={displayServices} />
 
       {/* ── PORTFOLIO ── */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-5">
-          <div className="text-center mb-12">
-            <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-3">Portfolio</p>
-            <h2
-              className="text-4xl text-stone-800"
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
-            >
-              Tác Phẩm Nổi Bật
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {PORTFOLIO_ITEMS.map(({ label, bg }) => (
-              <div
-                key={label}
-                className={`aspect-square rounded-2xl bg-gradient-to-br ${bg} relative overflow-hidden group cursor-pointer`}
-              >
-                {/* Thay bằng ảnh thật: <Image src={`/portfolio/${label}.jpg`} alt={label} fill className="object-cover" /> */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-                <div className="absolute bottom-3 left-3 bg-white/80 backdrop-blur-sm rounded-lg px-2.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <p className="text-xs font-medium text-stone-700">{label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <p className="text-center mt-6 text-sm text-stone-400">
-            Follow{' '}
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-rose-500 hover:underline"
-            >
-              @lanis.nails
-            </a>{' '}
-            để xem thêm tác phẩm mới nhất
-          </p>
-        </div>
-      </section>
+     <Portfolio />
 
       {/* ── REVIEWS ── */}
       <section id="reviews" className="py-20 bg-[#fdf8f5]">
         <div className="max-w-6xl mx-auto px-5">
           <div className="text-center mb-12">
-            <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-3">Đánh giá</p>
+            <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-3">Reviews</p>
             <h2
               className="text-4xl text-stone-800"
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
             >
-              Khách Hàng Nói Gì
+              What Our Clients Say
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-5">
@@ -448,16 +214,16 @@ export default async function HomePage() {
             className="text-4xl md:text-5xl text-white mb-4"
             style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
           >
-            Sẵn Sàng Để Tỏa Sáng?
+            Ready to Shine?
           </h2>
           <p className="text-rose-100 mb-8 text-base max-w-md mx-auto">
-            Đặt lịch hôm nay — chỉ mất 2 phút, nhận xác nhận ngay qua email.
+            Book your appointment today — it only takes 2 minutes, and you&apos;ll receive confirmation via email.
           </p>
           <Link
             href="/booking"
             className="inline-block bg-white text-rose-600 hover:bg-rose-50 px-10 py-4 rounded-full font-medium transition-all hover:scale-[1.02] text-sm tracking-wide"
           >
-            ĐẶT LỊCH NGAY — MIỄN PHÍ
+            BOOK NOW — FREE CONFIRMATION
           </Link>
         </div>
       </section>
@@ -470,7 +236,7 @@ export default async function HomePage() {
               className="text-2xl text-white italic mb-3"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              Lani&apos;s Nails
+              Trinh&apos;s Nails
             </p>
             <p className="text-sm leading-relaxed">
               Nail artistry crafted for you — with care, creativity, and precision.
@@ -478,23 +244,23 @@ export default async function HomePage() {
           </div>
 
           <div>
-            <p className="text-xs tracking-[3px] text-rose-400 uppercase mb-4">Liên hệ</p>
+            <p className="text-xs tracking-[3px] text-rose-400 uppercase mb-4">Contact</p>
             <ul className="space-y-2 text-sm">
-              <li>📍 123 Nguyễn Huệ, Q.1, TP.HCM</li>
-              <li>📞 0901 234 567</li>
-              <li>✉️ hello@lanisnails.vn</li>
+              <li>📍 148 Nguyễn Huy Tự, phường Bắc Hà, TP.Hà Tĩnh</li>
+              <li>📞 091 255 4570</li>
+              <li>✉️ hello@trinhsnails.vn</li>
             </ul>
           </div>
 
           <div>
-            <p className="text-xs tracking-[3px] text-rose-400 uppercase mb-4">Giờ mở cửa</p>
+            <p className="text-xs tracking-[3px] text-rose-400 uppercase mb-4">Opening Hours</p>
             <ul className="space-y-2 text-sm">
               <li className="flex justify-between">
-                <span>Thứ 2 – Thứ 7</span>
+                <span>Monday – Saturday</span>
                 <span className="text-white">9:00 – 19:00</span>
               </li>
               <li className="flex justify-between">
-                <span>Chủ nhật</span>
+                <span>Sunday</span>
                 <span className="text-white">10:00 – 17:00</span>
               </li>
             </ul>
@@ -513,7 +279,7 @@ export default async function HomePage() {
         </div>
 
         <div className="max-w-6xl mx-auto px-5 mt-10 pt-6 border-t border-stone-800 text-center text-xs">
-          © {new Date().getFullYear()} Lani&apos;s Nails. All rights reserved.
+          © {new Date().getFullYear()} Trinh&apos;s Nails. All rights reserved.
         </div>
       </footer>
     </main>
