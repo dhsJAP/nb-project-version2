@@ -1,17 +1,6 @@
 import Link from "next/link";
-import { ServiceCard } from "@/app/page";
-
-interface Service {
-  id: string
-  name: string
-  description: string
-  duration_minutes: number
-  price: number
-}
-
-interface ServicesProps {
-  services: Service[]
-}
+import { ServiceCard } from "./ServiceCard";
+import { Service, ServicesProps } from "@/type";
 
 const FALLBACK_SERVICES: Service[] = [];
 

@@ -1,21 +1,14 @@
-import { ReviewCard } from '@/app/page';
-
-interface Review {
-  id: string
-  author: string
-  rating: number
-  body: string
-  created_at: string
-}
+import { ReviewCard } from "./ReviewCard";
+import { Review } from "@/type";
 
 interface ReviewsProps {
-  reviews: Review[]
+  review: Review[];
 }
 
 const FALLBACK_REVIEWS: Review[] = [];
 
-export function Reviews({ reviews }: ReviewsProps) {
-    const displayReviews  = reviews.length  > 0 ? reviews  : FALLBACK_REVIEWS
+export function Reviews({ review }: ReviewsProps) {
+    const displayReviews  = review.length  > 0 ? review  : FALLBACK_REVIEWS
     return (
         <section id="reviews" className="py-20 bg-[#fdf8f5]">
         <div className="max-w-6xl mx-auto px-5">
