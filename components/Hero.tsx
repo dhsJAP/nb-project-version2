@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 
 export function Hero() {
@@ -8,11 +9,13 @@ export function Hero() {
         <section className="relative min-h-[88vh] flex items-center overflow-hidden">
         <div
           className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: 'repeating-linear-gradient(45deg,#c8727a 0,#c8727a 1px,transparent 0,transparent 50%)',
-            backgroundSize: '20px 20px',
-          }}
-        />
+        >
+          <Image src="/images/hero-nail.jpg" 
+          alt="Hero" 
+          fill 
+          className="object-cover"
+          priority />
+        </div>
         <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-rose-100 to-pink-50 blur-3xl opacity-60" />
         <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-gradient-to-tr from-amber-50 to-rose-50 blur-3xl opacity-50" />
 

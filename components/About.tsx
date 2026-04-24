@@ -11,12 +11,12 @@ export function About() {
             </div>
             <div className="absolute -bottom-4 -right-4 md:right-8 bg-rose-500 text-white rounded-2xl px-5 py-4 shadow-xl">
               <p className="text-3xl font-bold leading-none">7+</p>
-              <p className="text-xs mt-1 opacity-80">Năm kinh nghiệm</p>
+              <p className="text-xs mt-1 opacity-80">years of experience</p>
             </div>
           </div>
 
           <div>
-            <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-4">Về chúng tôi</p>
+            <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-4">About Us</p>
             <h2
               className="text-4xl text-stone-800 mb-6 leading-tight"
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
