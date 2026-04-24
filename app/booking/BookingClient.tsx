@@ -1,33 +1,14 @@
-// app/booking/BookingClient.tsx
 'use client'
 
 import { useState} from 'react'
 import Link from 'next/link'
+import { Service } from '@/type'
+import { BookingState } from '@/type'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface Service {
-  id: string
-  name: string
-  description: string
-  duration_minutes: number
-  price: number
-}
 
-interface BookingState {
-  service:     Service | null
-  date:        string | null   // 'YYYY-MM-DD'
-  time:        string | null   // 'HH:MM'
-  paymentMode: 'deposit' | 'full'
-  name:        string
-  email:       string
-  phone:       string
-  cardNumber:  string
-  cardExpiry:  string
-  cardCvc:     string
-  cardName:    string
-  notes:       string
-}
+
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

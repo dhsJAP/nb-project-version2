@@ -11,12 +11,6 @@ import { Service, Review } from '@/type'
 import { FALLBACK_SERVICES, FALLBACK_REVIEWS } from '@/constants/mockData'
 
 
-
-
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-
-
 // ─── Data fetching (Server Component) ────────────────────────────────────────
 
 async function getServices(): Promise<Service[]> {
