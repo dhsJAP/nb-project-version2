@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ServiceCard } from "@/app/page";
 
@@ -11,11 +9,12 @@ interface Service {
   price: number
 }
 
-const FALLBACK_SERVICES: Service[] = [];
-
 interface ServicesProps {
   services: Service[]
 }
+
+const FALLBACK_SERVICES: Service[] = [];
+
 
 export function Services({ services }: ServicesProps) {
   const displayServices = services.length > 0 ? services : FALLBACK_SERVICES;
