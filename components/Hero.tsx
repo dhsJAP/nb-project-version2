@@ -8,7 +8,7 @@ export function Hero() {
     return (
         <section className="relative min-h-[88vh] flex items-center overflow-hidden">
         <div
-          className="absolute inset-0 opacity-[0.04]"
+          className="absolute inset-0 opacity-100"
         >
           <Image src="/images/hero-nail.jpg" 
           alt="Hero" 
@@ -82,7 +82,11 @@ export function Hero() {
             <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden bg-gradient-to-br from-rose-200 via-pink-100 to-amber-100">
               {/* Thay bằng ảnh thật: <Image src="/hero-nails.jpg" alt="Bộ móng nghệ thuật" fill className="object-cover" priority /> */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-9xl select-none">💅</span>
+                <Image src="/images/right-side-hero.jpg" 
+                alt="Nail Art" 
+                fill 
+                className="object-cover" 
+                 />
               </div>
               <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-lg">
                 <p className="text-xs text-stone-400">Next availability</p>
