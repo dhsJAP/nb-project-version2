@@ -6,9 +6,9 @@ import Image from "next/image";
 
 export function Hero() {
     return (
-        <section className="relative min-h-[88vh] flex items-center overflow-hidden">
+        <section className="relative min-h-[90vh] flex items-center">
         <div
-          className="absolute inset-0 opacity-100"
+          className="absolute inset-0 opacity-50"
         >
           <Image src="/images/hero-nail.jpg" 
           alt="Hero" 
