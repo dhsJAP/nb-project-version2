@@ -14,7 +14,8 @@ export function Hero() {
           alt="Hero" 
           fill 
           className="object-cover"
-          priority />
+          preload={true}
+          sizes="100vw" />
         </div>
         <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-rose-100 to-pink-50 blur-3xl opacity-60" />
         <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-gradient-to-tr from-amber-50 to-rose-50 blur-3xl opacity-50" />
@@ -86,7 +87,7 @@ export function Hero() {
                 alt="Nail Art" 
                 fill 
                 className="object-cover" 
-                 />
+                sizes="(max-width: 768px) 100vw, 50vw" />
               </div>
               <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-lg">
                 <p className="text-xs text-stone-400">Next availability</p>
