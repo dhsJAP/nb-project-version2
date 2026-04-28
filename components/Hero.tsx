@@ -37,19 +37,19 @@ export function Hero() {
               <br />
               Excellence.
             </h1>
-            <p className="text-xs tracking-[4px] text-black uppercase mb-5">
+            <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-md">
               Book now to experience our professional nail care services — where every manicure is a work of art.
             </p>
             <div className="flex gap-3 flex-wrap">
               <Link
                 href="/booking"
-                className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-3.5 border-radius: 10px font-medium transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide"
+                className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-3.5 border-radius: 20px font-medium transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide"
               >
                 Book now
               </Link>
               <Link
                 href="#services"
-                className="border border-rose-200 text-rose-600 hover:bg-rose-50 px-8 py-3.5 border-radius: 10px font-medium transition-colors text-sm"
+                className="border border-rose-200 text-rose-600 hover:bg-rose-50 px-8 py-3.5 border-radius: 20px font-medium transition-colors text-sm"
               >
                 price list
               </Link>
@@ -75,25 +75,6 @@ export function Hero() {
                 <p className="text-xs text-stone-400">69+ reviews</p>
               </div>
             </div>
-          </div>
-
-          {/* Hero image */}
-          <div className="relative hidden md:block">
-            <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden bg-gradient-to-br from-rose-200 via-pink-100 to-amber-100">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Image src="/images/right-side-hero.jpg" 
-                alt="Nail Art" 
-                fill 
-                className="object-cover" 
-                sizes="(max-width: 768px) 100vw, 50vw" />
-              </div>
-              <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-lg">
-                <p className="text-xs text-stone-400">Next availability</p>
-                <p className="text-sm font-medium text-stone-700">Today, 2:00 PM</p>
-              </div>
-            </div>
-            <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-rose-50 border border-rose-100" />
-            <div className="absolute -bottom-6 -left-6 w-16 h-16 rounded-full bg-amber-50 border border-amber-100" />
           </div>
         </div>
       </section>
