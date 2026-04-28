@@ -69,10 +69,10 @@ export function Hero() {
               <div>
                 <div className="flex gap-0.5 mb-0.5">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <span key={i} className="text-rose-400 text-xs">★</span>
+                    <span key={i} className="text-rose-400 text-sm">★</span>
                   ))}
                 </div>
-                <p className="text-xs text-stone-400">69+ reviews</p>
+                <p className="text-xs text-stone-900">69+ reviews</p>
               </div>
             </div>
           </div>

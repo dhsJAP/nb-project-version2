@@ -1,13 +1,17 @@
 "use client";
 
+import Image from 'next/image';
+
 export function About() {
     return (
         <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">
           <div className="relative">
             <div className="aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-rose-100 to-amber-50 max-w-sm relative">
-              {/* Thay bằng ảnh thật: <Image src="/trinh-portrait.jpg" alt="Trinh" fill className="object-cover" /> */}
-              <div className="absolute inset-0 flex items-center justify-center text-7xl">🌸</div>
+              <Image src="/images/boss-nail.jpg" 
+              alt="Trinh" 
+              fill
+              className="object-cover" />
             </div>
             <div className="absolute -bottom-4 -right-4 md:right-8 bg-rose-500 text-white rounded-2xl px-5 py-4 shadow-xl">
               <p className="text-3xl font-bold leading-none">7+</p>
