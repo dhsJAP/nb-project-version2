@@ -17,7 +17,7 @@ export function ServiceCard({ service }: { service: Service }) {
       </p>
       <div className="flex items-center justify-between">
         <span className="text-xs text-stone-400 tracking-wide">
-          ⏱ {service.duration_minutes} phút
+          ⏱ {service.duration_minutes} minutes
         </span>
         <span
           className="text-2xl text-rose-600"

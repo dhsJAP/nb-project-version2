@@ -13,7 +13,7 @@ export function About() {
               fill
               className="object-cover" />
             </div>
-            <div className="absolute -bottom-4 -right-4 md:right-8 bg-[#9E7676] text-white rounded-2xl px-5 py-4 shadow-2xl shadow-[#9E7676]/20">
+            <div className="absolute -bottom-4 -right-4 md:right-8 bg-transparent text-black rounded-2xl px-5 py-4">
               <p className="text-3xl font-bold leading-none">7+</p>
               <p className="text-xs mt-1 opacity-80">years of experience</p>
             </div>
