@@ -37,19 +37,19 @@ export function Hero() {
               <br />
               Excellence.
             </h1>
-            <p className="text-stone-500 leading-relaxed mb-8 max-w-md text-base">
+            <p className="text-xs tracking-[4px] text-black uppercase mb-5">
               Book now to experience our professional nail care services — where every manicure is a work of art.
             </p>
             <div className="flex gap-3 flex-wrap">
               <Link
                 href="/booking"
-                className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide"
+                className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-3.5 border-radius: 4px font-medium transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide"
               >
                 Book now
               </Link>
               <Link
                 href="#services"
-                className="border border-rose-200 text-rose-600 hover:bg-rose-50 px-8 py-3.5 rounded-full font-medium transition-colors text-sm"
+                className="border border-rose-200 text-rose-600 hover:bg-rose-50 px-8 py-3.5 border-radius: 4px font-medium transition-colors text-sm"
               >
                 price list
               </Link>
