@@ -6,6 +6,16 @@ export interface Service {
   price: number
 }
 
+export interface ServiceItem {
+  id: string
+  service_id: string
+  name: string
+  description: string | null
+  duration_minutes: number | null
+  price: number | null
+  sort_order: number
+}
+
 export interface Review {
   id: string
   author: string
@@ -16,6 +26,7 @@ export interface Review {
 
 export interface ServicesProps {
   services: Service[]
+  serviceItemsByServiceId: Record<string, ServiceItem[]>
 }
 
 export interface ReviewCardProps {

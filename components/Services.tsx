@@ -1,13 +1,9 @@
 import Link from "next/link";
 import { ServiceCard } from "./ServiceCard";
-import { Service, ServicesProps } from "@/type";
-
-const FALLBACK_SERVICES: Service[] = [];
+import { ServicesProps } from "@/type";
 
 
-export function Services({ services }: ServicesProps) {
-  const displayServices = services.length > 0 ? services : FALLBACK_SERVICES;
-  
+export function Services({ services, serviceItemsByServiceId }: ServicesProps) {
   return (
         <section id="services" className="py-20 bg-[#fdf8f5]">
         <div className="max-w-6xl mx-auto px-5">
@@ -22,7 +18,13 @@ export function Services({ services }: ServicesProps) {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {displayServices.map((s) => <ServiceCard key={s.id} service={s} />)}
+            {services.map((s) => (
+              <ServiceCard
+                key={s.id}
+                service={s}
+                items={serviceItemsByServiceId[s.id] ?? []}
+              />
+            ))}
           </div>
 
           <div className="text-center mt-10">
