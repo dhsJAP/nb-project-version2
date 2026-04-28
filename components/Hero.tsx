@@ -10,7 +10,7 @@ export function Hero() {
         <div
           className="absolute inset-0 opacity-50"
         >
-          <Image src="/images/hero-nail.jpg" 
+          <Image src="/images/hero-nail2.jpg" 
           alt="Hero" 
           fill 
           className="object-cover"
@@ -21,7 +21,7 @@ export function Hero() {
         <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-gradient-to-tr from-amber-50 to-rose-50 blur-3xl opacity-50" />
 
         <div className="relative z-10 max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center py-24">
-          {/* Copy */}
+          
           <div>
             <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-5">
               Premium Nail Studio
@@ -43,13 +43,13 @@ export function Hero() {
             <div className="flex gap-3 flex-wrap">
               <Link
                 href="/booking"
-                className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-3.5 border-radius: 4px font-medium transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide"
+                className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-3.5 border-radius: 10px font-medium transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide"
               >
                 Book now
               </Link>
               <Link
                 href="#services"
-                className="border border-rose-200 text-rose-600 hover:bg-rose-50 px-8 py-3.5 border-radius: 4px font-medium transition-colors text-sm"
+                className="border border-rose-200 text-rose-600 hover:bg-rose-50 px-8 py-3.5 border-radius: 10px font-medium transition-colors text-sm"
               >
                 price list
               </Link>
@@ -80,7 +80,6 @@ export function Hero() {
           {/* Hero image */}
           <div className="relative hidden md:block">
             <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden bg-gradient-to-br from-rose-200 via-pink-100 to-amber-100">
-              {/* Thay bằng ảnh thật: <Image src="/hero-nails.jpg" alt="Bộ móng nghệ thuật" fill className="object-cover" priority /> */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <Image src="/images/right-side-hero.jpg" 
                 alt="Nail Art" 
