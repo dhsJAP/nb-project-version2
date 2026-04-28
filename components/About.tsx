@@ -4,16 +4,16 @@ import Image from 'next/image';
 
 export function About() {
     return (
-        <section className="py-20 bg-white">
+        <section className="py-24 bg-[#fdf8f5]">
         <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">
-          <div className="relative">
+          <div className="w-full md:w-1/2 relative">
             <div className="aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-rose-100 to-amber-50 max-w-sm relative">
               <Image src="/images/boss-nail.png" 
-              alt="Trinh" 
+              alt="Trinh Nails Salon" 
               fill
               className="object-cover" />
             </div>
-            <div className="absolute -bottom-4 -right-4 md:right-8 bg-rose-500 text-white rounded-2xl px-5 py-4 shadow-xl">
+            <div className="absolute -bottom-6 -left-6 w-full h-full border-2 border-[#C5A059]/20 -z-0">
               <p className="text-3xl font-bold leading-none">7+</p>
               <p className="text-xs mt-1 opacity-80">years of experience</p>
             </div>
@@ -27,7 +27,7 @@ export function About() {
             >
               Hello,
               <br />
-              I&apos;m <em className="text-rose-600">Trinh</em>
+              I&apos;m <em className="text-rose-600">Trinh Con</em>
             </h2>
             <p className="text-stone-500 leading-relaxed mb-4">
               With over 7 years of experience in the nail art industry, I don&apos;t just beautify hands — I create works of art that bear the unique personal touch of each client.
