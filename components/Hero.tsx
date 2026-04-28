@@ -30,16 +30,15 @@ export function Hero() {
               className="text-5xl md:text-6xl leading-[1.1] text-stone-800 mb-6"
               style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
             >
-              Sự Tinh Tế
+              The standard
               <br />
-              Trên{' '}
-              <em className="text-rose-600 not-italic">Đôi Tay</em>
+              of{' '}
+              <em className="text-rose-600 not-italic">Nail</em>
               <br />
-              Của Bạn.
+              Excellence.
             </h1>
             <p className="text-stone-500 leading-relaxed mb-8 max-w-md text-base">
-              Đặt lịch ngay để trải nghiệm dịch vụ chăm sóc móng cá nhân
-              chuyên nghiệp — nơi mỗi bộ móng là một tác phẩm nghệ thuật.
+              Book now to experience our professional nail care services — where every manicure is a work of art.
             </p>
             <div className="flex gap-3 flex-wrap">
               <Link
