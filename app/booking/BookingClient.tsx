@@ -16,7 +16,6 @@ import { BookingState } from '@/type'
 const MOCK_BOOKED_SLOTS: Record<string, string[]> = {
   // 'YYYY-MM-DD': ['HH:MM', ...]
 }
-
 const WORK_HOURS = [
   '09:00', '10:00', '10:30', '11:00', '11:30',
   '13:00', '13:30', '14:00', '14:30', '15:00',
@@ -69,9 +68,9 @@ function StepIndicator({ current }: { current: number }) {
             <div
               className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
                 s.n < current
-                  ? 'bg-rose-500 text-white'
+                  ? 'bg-rose-600 text-white'
                   : s.n === current
-                  ? 'bg-rose-500 text-white ring-4 ring-rose-100'
+                  ? 'bg-rose-600 text-white ring-4 ring-rose-100'
                   : 'bg-stone-100 text-stone-400'
               }`}
             >
@@ -221,7 +220,7 @@ function MiniCalendar({
               onClick={() => onSelect(iso)}
               className={`mx-auto w-8 h-8 rounded-full text-xs transition-all duration-150 flex items-center justify-center ${
                 sel
-                  ? 'bg-rose-500 text-white font-medium'
+                  ? 'bg-rose-600 text-white font-medium'
                   : disabled
                   ? 'text-stone-300 cursor-not-allowed'
                   : 'hover:bg-rose-50 text-stone-700 hover:text-rose-600'
@@ -275,7 +274,7 @@ function TimeSlots({
               onClick={() => onSelect(t)}
               className={`py-2.5 px-3 rounded-xl text-xs font-medium transition-all duration-150 flex items-center justify-between ${
                 isSel
-                  ? 'bg-rose-500 text-white'
+                  ? 'bg-rose-600 text-white'
                   : isBooked
                   ? 'bg-stone-50 text-stone-300 cursor-not-allowed'
                   : 'bg-stone-50 text-stone-600 hover:bg-rose-50 hover:text-rose-600'
@@ -477,7 +476,7 @@ export default function BookingClient({ services }: { services: Service[] }) {
                 disabled={!canGoStep2}
                 className={`px-8 py-3.5 rounded-full text-sm font-medium transition-all ${
                   canGoStep2
-                    ? 'bg-rose-500 hover:bg-rose-600 text-white hover:scale-[1.02]'
+                    ? 'bg-rose-600 hover:bg-rose-700 text-white hover:scale-[1.02]'
                     : 'bg-stone-100 text-stone-300 cursor-not-allowed'
                 }`}
               >
@@ -528,7 +527,7 @@ export default function BookingClient({ services }: { services: Service[] }) {
                 disabled={!canGoStep3}
                 className={`px-8 py-3.5 rounded-full text-sm font-medium transition-all ${
                   canGoStep3
-                    ? 'bg-rose-500 hover:bg-rose-600 text-white hover:scale-[1.02]'
+                    ? 'bg-rose-600 hover:bg-rose-700 text-white hover:scale-[1.02]'
                     : 'bg-stone-100 text-stone-300 cursor-not-allowed'
                 }`}
               >
@@ -710,7 +709,7 @@ export default function BookingClient({ services }: { services: Service[] }) {
                 disabled={!canConfirm || loading}
                 className={`px-8 py-3.5 rounded-full text-sm font-medium transition-all ${
                   canConfirm && !loading
-                    ? 'bg-rose-500 hover:bg-rose-600 text-white hover:scale-[1.02]'
+                    ? 'bg-rose-600 hover:bg-rose-700 text-white hover:scale-[1.02]'
                     : 'bg-stone-100 text-stone-300 cursor-not-allowed'
                 }`}
               >
@@ -786,7 +785,7 @@ export default function BookingClient({ services }: { services: Service[] }) {
                     cardCvc:'',cardName:'',notes:'',
                   })
                 }}
-                className="px-6 py-3 rounded-full bg-rose-500 hover:bg-rose-600 text-white text-sm transition-colors"
+                className="px-6 py-3 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-sm transition-colors"
               >
                 Đặt lịch mới
               </button>
@@ -797,3 +796,4 @@ export default function BookingClient({ services }: { services: Service[] }) {
     </div>
   )
 }
+

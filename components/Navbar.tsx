@@ -31,7 +31,7 @@ export function Navbar() {
 
           <Link
             href="/booking"
-            className="bg-rose-600 hover:bg-rose-700 text-white text-sm px-5 py-2.5 rounded-full transition-colors font-medium"
+            className="bg-rose-700 hover:bg-rose-800 text-white text-sm px-5 py-2.5 rounded-full transition-colors font-medium"
           >
             Book now
           </Link>
