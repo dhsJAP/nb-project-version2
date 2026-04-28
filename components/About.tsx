@@ -8,7 +8,7 @@ export function About() {
         <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">
           <div className="relative">
             <div className="aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-rose-100 to-amber-50 max-w-sm relative">
-              <Image src="/images/boss-nail.jpg" 
+              <Image src="/images/boss-nail.png" 
               alt="Trinh" 
               fill
               className="object-cover" />
