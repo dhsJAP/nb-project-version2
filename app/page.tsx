@@ -8,7 +8,7 @@ import { Reviews } from '@/components/Reviews'
 import { Banner } from '@/components/Banner'
 import { Footer } from '@/components/Footer'
 import { Service, Review } from '@/type'
-import { FALLBACK_SERVICES, FALLBACK_REVIEWS } from '@/constants/mockData'
+import { FALLBACK_REVIEWS } from '@/constants/mockData'
 
 
 // ─── Data fetching (Server Component) ────────────────────────────────────────
@@ -19,7 +19,6 @@ async function getServices(): Promise<Service[]> {
     .from('services')
     .select('*')
     .order('price', { ascending: true })
-    .limit(4)
 
   if (error) {
     console.error('Failed to fetch services:', error.message)
@@ -49,7 +48,7 @@ async function getReviews(): Promise<Review[]> {
 export default async function HomePage() {
   const [services, reviews] = await Promise.all([getServices(), getReviews()])
 
-  const displayServices = services.length > 0 ? services : FALLBACK_SERVICES
+  const displayServices = services
   const displayReviews  = reviews.length  > 0 ? reviews  : FALLBACK_REVIEWS
 
   return (
