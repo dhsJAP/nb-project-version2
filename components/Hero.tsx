@@ -17,6 +17,7 @@ export function Hero() {
           preload={true}
           sizes="100vw" />
         </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent pointer-events-none" />
         <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-rose-100 to-pink-50 blur-3xl opacity-60" />
         <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-gradient-to-tr from-amber-50 to-rose-50 blur-3xl opacity-50" />
 
@@ -43,13 +44,13 @@ export function Hero() {
             <div className="mt-2 flex gap-3 flex-wrap">
               <Link
                 href="/booking"
-                className="bg-rose-700 hover:bg-rose-800 text-white px-8 py-3.5 rounded-2xl font-medium transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide"
+                className="bg-[#9E7676] hover:bg-[#8C6868] text-white px-8 py-3.5 rounded-2xl font-medium transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide"
               >
                 Book now
               </Link>
               <Link
                 href="#services"
-                className="border border-stone-800 text-black hover:bg-stone-100 px-8 py-3.5 rounded-2xl font-medium transition-colors text-sm"
+                className="border border-[#2D2926] text-[#2D2926] hover:bg-[#2D2926]/10 px-8 py-3.5 rounded-2xl font-medium transition-colors text-sm"
               >
                 price list
               </Link>
@@ -72,7 +73,7 @@ export function Hero() {
                     <span key={i} className="text-rose-400 text-sm">★</span>
                   ))}
                 </div>
-                <p className="text-xs text-stone-900">69+ reviews</p>
+                <p className="text-xs text-stone-500 tracking-wider">69+ reviews</p>
               </div>
             </div>
           </div>
