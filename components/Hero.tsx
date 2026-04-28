@@ -37,7 +37,7 @@ export function Hero() {
               <br />
               Excellence.
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-md">
+            <p className="mt-6 text-lg text-stone-800 leading-relaxed max-w-md">
               Book now to experience our professional nail care services — where every manicure is a work of art.
             </p>
             <div className="flex gap-3 flex-wrap">
