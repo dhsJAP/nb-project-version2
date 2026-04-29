@@ -38,7 +38,7 @@ export function ServiceCard({
 
       {items.length > 0 && (
         <div className="pointer-events-none absolute left-4 right-4 top-[calc(100%-8px)] z-20 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-all duration-200">
-          <div className="rounded-xl border border-rose-100 bg-white shadow-xl p-3 pointer-events-auto">
+          <div className="rounded-xl border border-rose-100 bg-white shadow-xl p-3 pointer-events-none">
             <p className="text-[10px] tracking-[2px] uppercase text-rose-400 mb-2">
               Service Details
             </p>
