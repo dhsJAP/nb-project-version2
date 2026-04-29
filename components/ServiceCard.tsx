@@ -8,7 +8,10 @@ export function ServiceCard({
   items: ServiceItem[]
 }) {
   return (
-    <div className="group relative bg-white border border-rose-100 rounded-2xl p-6 hover:border-rose-300 hover:shadow-lg transition-all duration-300">
+    <div
+      tabIndex={0}
+      className="group relative bg-white border border-rose-100 rounded-2xl p-6 hover:border-rose-300 hover:shadow-lg focus:outline-none focus:border-rose-300 focus:shadow-lg transition-all duration-300"
+    >
       <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
         <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-rose-50 group-hover:bg-rose-100 transition-colors" />
       </div>
@@ -34,7 +37,7 @@ export function ServiceCard({
       </div>
 
       {items.length > 0 && (
-        <div className="pointer-events-none absolute left-4 right-4 top-[calc(100%-8px)] z-20 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
+        <div className="pointer-events-none absolute left-4 right-4 top-[calc(100%-8px)] z-20 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-all duration-200">
           <div className="rounded-xl border border-rose-100 bg-white shadow-xl p-3 pointer-events-auto">
             <p className="text-[10px] tracking-[2px] uppercase text-rose-400 mb-2">
               Service Details

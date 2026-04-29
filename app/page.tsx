@@ -10,6 +10,8 @@ import { Footer } from '@/components/Footer'
 import { Service, Review, ServiceItem } from '@/type'
 import { FALLBACK_REVIEWS } from '@/constants/mockData'
 
+export const dynamic = 'force-dynamic'
+
 
 // ─── Data fetching (Server Component) ────────────────────────────────────────
 
