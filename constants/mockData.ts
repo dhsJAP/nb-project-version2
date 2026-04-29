@@ -1,4 +1,4 @@
-import { Review,} from "@/type";
+import { Review } from "@/type";
 
 
 export const FALLBACK_REVIEWS: Review[] = [
