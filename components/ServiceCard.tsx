@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useState } from "react";
 import { Service, ServiceItem } from "@/type";
 
@@ -92,20 +93,26 @@ export function ServiceCard({
             <ul className="space-y-2 max-h-56 overflow-y-auto pr-1">
               {items.map((item) => (
                 <li key={item.id} className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-sm text-stone-700 leading-tight">{item.name}</p>
-                    {item.description && (
-                      <p className="text-xs text-stone-400 mt-0.5 leading-snug">{item.description}</p>
-                    )}
-                  </div>
-                  <div className="text-right shrink-0">
-                    {item.price !== null && (
-                      <p className="text-sm text-rose-600 font-medium">${item.price}</p>
-                    )}
-                    {item.duration_minutes !== null && (
-                      <p className="text-[11px] text-stone-400">{item.duration_minutes}m</p>
-                    )}
-                  </div>
+                  <Link
+                    href={`/booking?serviceId=${service.id}&itemId=${item.id}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-full flex items-start justify-between gap-3 rounded-lg px-2 py-1.5 hover:bg-rose-50 transition-colors"
+                  >
+                    <div>
+                      <p className="text-sm text-stone-700 leading-tight">{item.name}</p>
+                      {item.description && (
+                        <p className="text-xs text-stone-400 mt-0.5 leading-snug">{item.description}</p>
+                      )}
+                    </div>
+                    <div className="text-right shrink-0">
+                      {item.price !== null && (
+                        <p className="text-sm text-rose-600 font-medium">${item.price}</p>
+                      )}
+                      {item.duration_minutes !== null && (
+                        <p className="text-[11px] text-stone-400">{item.duration_minutes}m</p>
+                      )}
+                    </div>
+                  </Link>
                 </li>
               ))}
             </ul>
