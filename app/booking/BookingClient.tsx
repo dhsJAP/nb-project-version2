@@ -128,9 +128,9 @@ function MiniCalendar({ selectedDate, onSelect }: { selectedDate: string | null;
   return (
     <div className="bg-white rounded-2xl border border-stone-100 overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3 bg-rose-50 border-b border-rose-100">
-        <button onClick={() => { if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1) } else setViewMonth((m) => m - 1) }} className="w-7 h-7 rounded-full hover:bg-rose-100">‹</button>
+        <button onClick={() => { if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1) } else setViewMonth((m) => m - 1) }} className="w-7 h-7 rounded-full border border-rose-200 bg-white text-rose-600 hover:bg-rose-100 transition-colors">‹</button>
         <span className="text-sm font-medium text-stone-700">{viewMonth + 1}/{viewYear}</span>
-        <button onClick={() => { if (viewMonth === 11) { setViewMonth(0); setViewYear((y) => y + 1) } else setViewMonth((m) => m + 1) }} className="w-7 h-7 rounded-full hover:bg-rose-100">›</button>
+        <button onClick={() => { if (viewMonth === 11) { setViewMonth(0); setViewYear((y) => y + 1) } else setViewMonth((m) => m + 1) }} className="w-7 h-7 rounded-full border border-rose-200 bg-white text-rose-600 hover:bg-rose-100 transition-colors">›</button>
       </div>
       <div className="grid grid-cols-7 px-3 pt-2 text-center text-xs text-stone-400">{['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d) => <div key={d} className="py-1">{d}</div>)}</div>
       <div className="grid grid-cols-7 px-3 pb-3 gap-y-0.5">
@@ -221,7 +221,21 @@ export default function BookingClient({ services, serviceItems }: { services: Se
         </div>}
 
         {step === 2 && <div>
-          <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 mb-6"><p className="text-[10px] text-rose-400 uppercase tracking-widest mb-1">Dich vu</p><div className="space-y-1">{selectedItems.map((item) => <p key={item.id} className="text-sm text-stone-700">• {serviceById[item.service_id]?.name}: {item.name}</p>)}</div></div>
+          <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 mb-6">
+            <p className="text-[10px] text-rose-400 uppercase tracking-widest mb-1">Dich vu</p>
+            <div className="space-y-2">
+              {Object.entries(groupedSelection).map(([serviceId, items]) => (
+                <div key={serviceId}>
+                  <p className="text-sm text-stone-700 font-medium">{serviceById[serviceId]?.name ?? 'Service'}</p>
+                  <div className="mt-0.5 space-y-0.5">
+                    {items.map((item) => (
+                      <p key={item.id} className="text-sm text-stone-600">- {item.name}</p>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="grid sm:grid-cols-2 gap-4 mb-6"><MiniCalendar selectedDate={form.date} onSelect={(iso) => setForm((prev) => ({ ...prev, date: iso, time: null }))} /><TimeSlots selectedDate={form.date} selectedTime={form.time} onSelect={(t) => setForm((prev) => ({ ...prev, time: t }))} /></div>
           <div className="bg-white rounded-2xl border border-stone-100 p-4 mb-6"><label className="block text-xs text-stone-500 mb-1.5">Notes (optional)</label><textarea rows={3} value={form.notes} onChange={(e) => setForm((prev) => ({ ...prev, notes: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm" /></div>
           <div className="flex justify-between"><button onClick={() => setStep(1)} className="px-6 py-3 rounded-full text-sm text-stone-400 hover:text-rose-500">← Back</button><button onClick={() => canGoStep3 && setStep(3)} disabled={!canGoStep3} className={`px-8 py-3.5 rounded-full text-sm font-medium ${canGoStep3 ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'bg-stone-100 text-stone-300'}`}>Continue →</button></div>
