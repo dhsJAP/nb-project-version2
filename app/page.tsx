@@ -2,6 +2,7 @@ import { getSupabase } from '@/lib/supabase'
 import { Navbar } from '@/components/Navbar'
 import { Hero } from '@/components/Hero'
 import { About } from '@/components/About'
+import { StaffSection } from '@/components/StaffSection'
 import { Services } from '@/components/Services'
 import { Portfolio } from '@/components/Portfolio'
 import { Reviews } from '@/components/Reviews'
@@ -9,6 +10,7 @@ import { Banner } from '@/components/Banner'
 import { Footer } from '@/components/Footer'
 import { Service, Review, ServiceItem } from '@/type'
 import { FALLBACK_REVIEWS } from '@/constants/mockData'
+import { StaffMember } from '@/type'
 
 export const dynamic = 'force-dynamic'
 
@@ -59,14 +61,30 @@ async function getReviews(): Promise<Review[]> {
   return data ?? []
 }
 
+async function getStaff(): Promise<StaffMember[]> {
+  const supabase = getSupabase()
+  const { data, error } = await supabase
+    .from('staff')
+    .select('id, name, role, image_url')
+    .eq('is_active', true)
+    .order('created_at', { ascending: true })
+
+  if (error) {
+    console.error('Failed to fetch staff:', error.message)
+    return []
+  }
+  return data ?? []
+}
+
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function HomePage() {
-  const [services, serviceItems, reviews] = await Promise.all([
+  const [services, serviceItems, reviews, staff] = await Promise.all([
     getServices(),
     getServiceItems(),
     getReviews(),
+    getStaff(),
   ])
 
   const displayServices = services
@@ -92,6 +110,7 @@ export default async function HomePage() {
 
       {/* ── ABOUT ── */}
       <About />
+      <StaffSection staff={staff} />
 
       {/* ── SERVICES ── */}
       <Services

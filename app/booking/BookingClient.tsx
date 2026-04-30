@@ -3,13 +3,15 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { Service, ServiceItem } from '@/type'
+import Image from 'next/image'
+import { Service, ServiceItem, StaffMember } from '@/type'
 
 type PaymentMode = 'deposit' | 'full'
 
 type BookingFormState = {
   date: string | null
   time: string | null
+  staffId: string | null
   paymentMode: PaymentMode
   name: string
   email: string
@@ -44,9 +46,10 @@ function formatDate(iso: string) {
 function StepIndicator({ current }: { current: number }) {
   const steps = [
     { n: 1, label: 'Services' },
-    { n: 2, label: 'Date & Time' },
-    { n: 3, label: 'Payment' },
-    { n: 4, label: 'Done' },
+    { n: 2, label: 'Staff' },
+    { n: 3, label: 'Date & Time' },
+    { n: 4, label: 'Payment' },
+    { n: 5, label: 'Done' },
   ]
   return (
     <div className="flex items-center justify-center gap-0 mb-10">
@@ -165,7 +168,7 @@ function TimeSlots({ selectedDate, selectedTime, onSelect }: { selectedDate: str
   )
 }
 
-export default function BookingClient({ services, serviceItems }: { services: Service[]; serviceItems: ServiceItem[] }) {
+export default function BookingClient({ services, serviceItems, staff }: { services: Service[]; serviceItems: ServiceItem[]; staff: StaffMember[] }) {
   const searchParams = useSearchParams()
   const initialItemId = searchParams.get('itemId')
   const initialServiceId = searchParams.get('serviceId')
@@ -173,7 +176,7 @@ export default function BookingClient({ services, serviceItems }: { services: Se
   const [step, setStep] = useState(1)
   const [openServiceId, setOpenServiceId] = useState<string | null>(initialServiceId)
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>(initialItemId ? [initialItemId] : [])
-  const [form, setForm] = useState<BookingFormState>({ date: null, time: null, paymentMode: 'deposit', name: '', email: '', phone: '', cardNumber: '', cardExpiry: '', cardCvc: '', cardName: '', notes: '' })
+  const [form, setForm] = useState<BookingFormState>({ date: null, time: null, staffId: null, paymentMode: 'deposit', name: '', email: '', phone: '', cardNumber: '', cardExpiry: '', cardCvc: '', cardName: '', notes: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -189,17 +192,18 @@ export default function BookingClient({ services, serviceItems }: { services: Se
 
   const toggleItem = (itemId: string) => setSelectedItemIds((prev) => (prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]))
   const canGoStep2 = selectedItemIds.length > 0
-  const canGoStep3 = canGoStep2 && !!form.date && !!form.time
-  const canConfirm = canGoStep3 && !!form.name.trim() && !!form.email.trim() && !!form.cardNumber.trim() && !!form.cardExpiry.trim() && !!form.cardCvc.trim()
+  const canGoStep3 = canGoStep2 && !!form.staffId
+  const canGoStep4 = canGoStep3 && !!form.date && !!form.time
+  const canConfirm = canGoStep4 && !!form.name.trim() && !!form.email.trim() && !!form.cardNumber.trim() && !!form.cardExpiry.trim() && !!form.cardCvc.trim()
 
   async function handleSubmit() {
     if (!canConfirm) return
     setLoading(true); setError('')
     try {
       const primaryItem = selectedItems[0]
-      const res = await fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ serviceId: primaryItem?.service_id, serviceItemIds: selectedItemIds, date: form.date, time: form.time, customerName: form.name, customerEmail: form.email, customerPhone: form.phone, paymentMode: form.paymentMode, price: totalPrice, notes: form.notes }) })
+      const res = await fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ serviceId: primaryItem?.service_id, serviceItemIds: selectedItemIds, staffId: form.staffId, date: form.date, time: form.time, customerName: form.name, customerEmail: form.email, customerPhone: form.phone, paymentMode: form.paymentMode, price: totalPrice, notes: form.notes }) })
       if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || 'Something went wrong') }
-      setStep(4)
+      setStep(5)
     } catch (e) { setError(e instanceof Error ? e.message : String(e)) } finally { setLoading(false) }
   }
 
@@ -207,8 +211,8 @@ export default function BookingClient({ services, serviceItems }: { services: Se
     <div className="min-h-screen bg-[#fdf8f5]">
       <header className="sticky top-0 z-40 bg-[#fdf8f5]/90 backdrop-blur-sm border-b border-rose-100"><div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between"><Link href="/" className="text-2xl text-rose-800 italic tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Trinh&apos;s Nails</Link><Link href="/" className="text-sm text-stone-400 hover:text-rose-500">Home</Link></div></header>
       <div className="max-w-2xl mx-auto px-5 py-12">
-        <div className="text-center mb-10"><p className="text-xs tracking-[4px] text-rose-400 uppercase mb-2">Booking</p><h1 className="text-4xl text-stone-800" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{step === 4 ? 'Booking Confirmed!' : 'Select Your Services'}</h1></div>
-        {step < 4 && <StepIndicator current={step} />}
+        <div className="text-center mb-10"><p className="text-xs tracking-[4px] text-rose-400 uppercase mb-2">Booking</p><h1 className="text-4xl text-stone-800" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{step === 5 ? 'Booking Confirmed!' : 'Select Your Services'}</h1></div>
+        {step < 5 && <StepIndicator current={step} />}
 
         {step === 1 && <div className="space-y-4">
           <div className="grid sm:grid-cols-2 gap-4">{services.map((s) => <ServiceGroupCard key={s.id} service={s} selectedCount={(groupedSelection[s.id] ?? []).length} onOpen={() => setOpenServiceId(s.id)} />)}</div>
@@ -220,7 +224,32 @@ export default function BookingClient({ services, serviceItems }: { services: Se
           <div className="pt-2 flex justify-end"><button onClick={() => canGoStep2 && setStep(2)} disabled={!canGoStep2} className={`px-8 py-3.5 rounded-full text-sm font-medium ${canGoStep2 ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'bg-stone-100 text-stone-300'}`}>Continue</button></div>
         </div>}
 
-        {step === 2 && <div>
+        {step === 2 && <div className="space-y-5">
+          <div className="bg-white rounded-2xl border border-stone-100 p-5">
+            <h2 className="text-lg text-stone-700 mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>Choose Your Staff</h2>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {staff.map((member) => (
+                <button
+                  key={member.id}
+                  onClick={() => setForm((prev) => ({ ...prev, staffId: member.id }))}
+                  className={`text-left rounded-2xl border-2 p-3 transition-all ${form.staffId === member.id ? 'border-rose-400 bg-rose-50' : 'border-stone-100 hover:border-rose-200'}`}
+                >
+                  <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-stone-100 mb-3">
+                    <Image src={member.image_url || '/images/boss.png'} alt={member.name} fill className="object-cover" />
+                  </div>
+                  <p className="text-sm text-stone-800 font-medium">{member.name}</p>
+                  <p className="text-xs text-stone-500 mt-0.5">{member.role}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <button onClick={() => setStep(1)} className="px-6 py-3 rounded-full text-sm text-stone-400 border border-rose-200 hover:text-rose-500 hover:bg-rose-50 transition-colors">Back</button>
+            <button onClick={() => canGoStep3 && setStep(3)} disabled={!canGoStep3} className={`px-8 py-3.5 rounded-full text-sm font-medium ${canGoStep3 ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'bg-stone-100 text-stone-300'}`}>Continue</button>
+          </div>
+        </div>}
+
+        {step === 3 && <div>
           <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 mb-6">
             <p className="text-[10px] text-rose-400 uppercase tracking-widest mb-1">Services</p>
             <div className="space-y-2">
@@ -238,18 +267,18 @@ export default function BookingClient({ services, serviceItems }: { services: Se
           </div>         
           <div className="grid sm:grid-cols-2 gap-4 mb-6"><MiniCalendar selectedDate={form.date} onSelect={(iso) => setForm((prev) => ({ ...prev, date: iso, time: null }))} /><TimeSlots selectedDate={form.date} selectedTime={form.time} onSelect={(t) => setForm((prev) => ({ ...prev, time: t }))} /></div>
           <div className="bg-white rounded-2xl border border-stone-100 p-4 mb-6"><label className="block text-xs text-stone-500 mb-1.5">Notes (optional)</label><textarea rows={3} value={form.notes} onChange={(e) => setForm((prev) => ({ ...prev, notes: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm placeholder:font-semibold placeholder:text-stone-500 focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /></div>
-          <div className="flex justify-between"><button onClick={() => setStep(1)} className="px-6 py-3 rounded-full text-sm text-stone-400 border border-stone-200 bg-white/80 backdrop-blur-sm hover:border-rose-200 hover:text-rose-400 transition-all"> Back </button><button onClick={() => canGoStep3 && setStep(3)} disabled={!canGoStep3} className={`px-8 py-3.5 rounded-full text-sm font-medium ${canGoStep3 ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'bg-stone-100 text-stone-300'}`}>Continue</button></div>
+          <div className="flex justify-between"><button onClick={() => setStep(2)} className="px-6 py-3 rounded-full text-sm text-stone-400 border border-rose-200 hover:text-rose-500 hover:bg-rose-50 transition-colors">Back</button><button onClick={() => canGoStep4 && setStep(4)} disabled={!canGoStep4} className={`px-8 py-3.5 rounded-full text-sm font-medium ${canGoStep4 ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'bg-stone-100 text-stone-300'}`}>Continue</button></div>
         </div>}
 
-        {step === 3 && <div className="space-y-5">
+        {step === 4 && <div className="space-y-5">
           <div className="bg-white rounded-2xl border border-stone-100 p-5"><h2 className="text-lg text-stone-700 mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>Customer Info</h2><div className="grid sm:grid-cols-2 gap-4"><input placeholder="Full name" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} className="px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-medium placeholder:text-stone-300 focus:placeholder-transparent focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /><input placeholder="Phone" value={form.phone} onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))} className="px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-medium placeholder:text-stone-300 focus:placeholder-transparent focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /><input placeholder="Email" value={form.email} onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))} className="sm:col-span-2 px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-medium placeholder:text-stone-300 focus:placeholder-transparent focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /></div></div>
-          <div className="bg-white rounded-2xl border border-stone-100 p-5"><h2 className="text-lg text-stone-700 mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>Payment</h2><div className="grid grid-cols-2 gap-3 mb-5">{(['deposit', 'full'] as const).map((mode) => <button key={mode} onClick={() => setForm((p) => ({ ...p, paymentMode: mode }))} className={`p-4 rounded-xl border-2 text-left ${form.paymentMode === mode ? 'border-rose-400 bg-rose-50' : 'border-stone-100'}`}><p className="text-sm font-medium text-stone-700 mb-0.5">{mode === 'deposit' ? 'Deposit' : 'Pay full'}</p><p className="text-xl text-rose-600" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>${mode === 'deposit' ? 15 : totalPrice}</p></button>)}</div><div className="space-y-3"><input placeholder="Card number" value={form.cardNumber} onChange={(e) => setForm((p) => ({ ...p, cardNumber: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-medium placeholder:text-stone-300 focus:placeholder-transparent focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /><div className="grid grid-cols-2 gap-3"><input placeholder="MM/YY" value={form.cardExpiry} onChange={(e) => setForm((p) => ({ ...p, cardExpiry: e.target.value }))} className="px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-medium placeholder:text-stone-300 focus:placeholder-transparent focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /><input placeholder="CVV" value={form.cardCvc} onChange={(e) => setForm((p) => ({ ...p, cardCvc: e.target.value }))} className="px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-medium placeholder:text-stone-300 focus:placeholder-transparent focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /></div><input placeholder="Name on card" value={form.cardName} onChange={(e) => setForm((p) => ({ ...p, cardName: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-medium placeholder:text-stone-300 focus:placeholder-transparent focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /></div></div>
+          <div className="bg-white rounded-2xl border border-stone-100 p-5"><h2 className="text-lg text-stone-700 mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>Payment</h2><div className="grid grid-cols-2 gap-3 mb-5">{(['deposit', 'full'] as const).map((mode) => <button key={mode} onClick={() => setForm((p) => ({ ...p, paymentMode: mode }))} className={`p-4 rounded-xl border-2 text-left ${form.paymentMode === mode ? 'border-rose-400 bg-rose-50' : 'border-stone-100'}`}><p className="text-sm font-medium text-stone-700 mb-0.5">{mode === 'deposit' ? 'Deposit' : 'Pay full'}</p><p className="text-xl text-rose-600" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>${mode === 'deposit' ? Math.round(totalPrice * 0.3) : totalPrice}</p></button>)}</div><div className="space-y-3"><input placeholder="Card number" value={form.cardNumber} onChange={(e) => setForm((p) => ({ ...p, cardNumber: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-medium placeholder:text-stone-300 focus:placeholder-transparent focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /><div className="grid grid-cols-2 gap-3"><input placeholder="MM/YY" value={form.cardExpiry} onChange={(e) => setForm((p) => ({ ...p, cardExpiry: e.target.value }))} className="px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-medium placeholder:text-stone-300 focus:placeholder-transparent focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /><input placeholder="CVV" value={form.cardCvc} onChange={(e) => setForm((p) => ({ ...p, cardCvc: e.target.value }))} className="px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-medium placeholder:text-stone-300 focus:placeholder-transparent focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /></div><input placeholder="Name on card" value={form.cardName} onChange={(e) => setForm((p) => ({ ...p, cardName: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-medium placeholder:text-stone-300 focus:placeholder-transparent focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /></div></div>
           <div className="bg-white rounded-2xl border border-stone-100 p-5"><h2 className="text-lg text-stone-700 mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>Booking Summary</h2><div className="space-y-2 text-sm"><div className="flex justify-between py-1.5 border-b border-stone-50"><span className="text-stone-400">Services</span><span className="text-stone-700 font-medium text-right max-w-[60%]">{selectedItems.map((i) => i.name).join(', ') || '�'}</span></div><div className="flex justify-between py-1.5 border-b border-stone-50"><span className="text-stone-400">Day</span><span className="text-stone-700 font-medium">{form.date ? formatDate(form.date) : '�'}</span></div><div className="flex justify-between py-1.5 border-b border-stone-50"><span className="text-stone-400">Time slot</span><span className="text-stone-700 font-medium">{form.time ? formatTime(form.time) : '�'}</span></div><div className="flex justify-between py-1.5 border-b border-stone-50"><span className="text-stone-400">Duration</span><span className="text-stone-700 font-medium">{totalDuration} min</span></div><div className="flex justify-between pt-2"><span className="text-stone-700 font-medium">{form.paymentMode === 'deposit' ? 'Pay now' : 'Total'}</span><span className="text-rose-600 text-xl" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>${payAmount}</span></div></div></div>
           {error && <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">{error}</div>}
-          <div className="flex justify-between pt-2"><button onClick={() => setStep(2)} className="px-6 py-3 rounded-full text-sm text-stone-400 border border-stone-200 bg-white/80 backdrop-blur-sm hover:border-rose-200 hover:text-rose-400 transition-all">Back</button><button onClick={handleSubmit} disabled={!canConfirm || loading} className={`px-8 py-3.5 rounded-full text-sm font-medium ${canConfirm && !loading ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'bg-stone-100 text-stone-300'}`}>{loading ? 'Processing...' : `CONFIRM $${payAmount}`}</button></div>
+          <div className="flex justify-between pt-2"><button onClick={() => setStep(3)} className="px-6 py-3 rounded-full text-sm text-stone-400 border border-rose-200 hover:text-rose-500 hover:bg-rose-50 transition-colors">Back</button><button onClick={handleSubmit} disabled={!canConfirm || loading} className={`px-8 py-3.5 rounded-full text-sm font-medium ${canConfirm && !loading ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'bg-stone-100 text-stone-300'}`}>{loading ? 'Processing...' : `CONFIRM $${payAmount}`}</button></div>
         </div>}
 
-        {step === 4 && <div className="text-center"><div className="w-20 h-20 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-6 text-3xl">?</div><p className="text-stone-500 mb-8 leading-relaxed">Thank you <strong>{form.name}</strong>. Your booking has been confirmed.</p><div className="bg-white rounded-2xl border border-rose-100 p-6 text-left max-w-sm mx-auto mb-8"><p className="text-sm text-stone-700 mb-2">Services:</p>{selectedItems.map((item) => <p key={item.id} className="text-xs text-stone-500">� {serviceById[item.service_id]?.name}: {item.name}</p>)}<p className="text-xs text-stone-500 mt-3">Date: {form.date ? formatDate(form.date) : '-'}</p><p className="text-xs text-stone-500">Time: {form.time ? formatTime(form.time) : '-'}</p></div><div className="flex gap-3 justify-center"><Link href="/" className="px-6 py-3 rounded-full border border-rose-200 text-rose-600 text-sm hover:bg-rose-50">Home</Link><button onClick={() => { setStep(1); setSelectedItemIds([]); setForm({ date: null, time: null, paymentMode: 'deposit', name: '', email: '', phone: '', cardNumber: '', cardExpiry: '', cardCvc: '', cardName: '', notes: '' }) }} className="px-6 py-3 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-sm">New booking</button></div></div>}
+        {step === 5 && <div className="text-center"><div className="w-20 h-20 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-6 text-3xl">?</div><p className="text-stone-500 mb-8 leading-relaxed">Thank you <strong>{form.name}</strong>. Your booking has been confirmed.</p><div className="bg-white rounded-2xl border border-rose-100 p-6 text-left max-w-sm mx-auto mb-8"><p className="text-sm text-stone-700 mb-2">Services:</p>{selectedItems.map((item) => <p key={item.id} className="text-xs text-stone-500">� {serviceById[item.service_id]?.name}: {item.name}</p>)}<p className="text-xs text-stone-500 mt-3">Staff: {staff.find((member) => member.id === form.staffId)?.name ?? '-'}</p><p className="text-xs text-stone-500 mt-1">Date: {form.date ? formatDate(form.date) : '-'}</p><p className="text-xs text-stone-500">Time: {form.time ? formatTime(form.time) : '-'}</p></div><div className="flex gap-3 justify-center"><Link href="/" className="px-6 py-3 rounded-full border border-rose-200 text-rose-600 text-sm hover:bg-rose-50">Home</Link><button onClick={() => { setStep(1); setSelectedItemIds([]); setForm({ date: null, time: null, staffId: null, paymentMode: 'deposit', name: '', email: '', phone: '', cardNumber: '', cardExpiry: '', cardCvc: '', cardName: '', notes: '' }) }} className="px-6 py-3 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-sm">New booking</button></div></div>}
       </div>
 
       {openServiceId && serviceById[openServiceId] && <ServicesModal service={serviceById[openServiceId]} items={itemsByServiceId[openServiceId] ?? []} selectedItemIds={new Set(selectedItemIds)} onToggleItem={toggleItem} onClose={() => setOpenServiceId(null)} />}

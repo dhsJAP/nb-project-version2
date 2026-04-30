@@ -24,6 +24,13 @@ export interface Review {
   created_at: string
 }
 
+export interface StaffMember {
+  id: string
+  name: string
+  role: string
+  image_url: string | null
+}
+
 export interface ServicesProps {
   services: Service[]
   serviceItemsByServiceId: Record<string, ServiceItem[]>
