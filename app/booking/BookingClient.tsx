@@ -128,9 +128,9 @@ function MiniCalendar({ selectedDate, onSelect }: { selectedDate: string | null;
   return (
     <div className="bg-white rounded-2xl border border-stone-100 overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3 bg-rose-50 border-b border-rose-100">
-        <button onClick={() => { if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1) } else setViewMonth((m) => m - 1) }} className="w-7 h-7 rounded-full border border-rose-200 bg-white text-rose-600 hover:bg-rose-100 transition-colors">�</button>
+        <button onClick={() => { if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1) } else setViewMonth((m) => m - 1) }} className="w-7 h-7 rounded-full border border-rose-200 bg-white text-rose-600 hover:bg-rose-100 transition-colors">‹</button>
         <span className="text-sm font-medium text-stone-700">{viewMonth + 1}/{viewYear}</span>
-        <button onClick={() => { if (viewMonth === 11) { setViewMonth(0); setViewYear((y) => y + 1) } else setViewMonth((m) => m + 1) }} className="w-7 h-7 rounded-full border border-rose-200 bg-white text-rose-600 hover:bg-rose-100 transition-colors">�</button>
+        <button onClick={() => { if (viewMonth === 11) { setViewMonth(0); setViewYear((y) => y + 1) } else setViewMonth((m) => m + 1) }} className="w-7 h-7 rounded-full border border-rose-200 bg-white text-rose-600 hover:bg-rose-100 transition-colors">›</button>
       </div>
       <div className="grid grid-cols-7 px-3 pt-2 text-center text-xs text-stone-400">{['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d) => <div key={d} className="py-1">{d}</div>)}</div>
       <div className="grid grid-cols-7 px-3 pb-3 gap-y-0.5">
@@ -256,5 +256,4 @@ export default function BookingClient({ services, serviceItems }: { services: Se
     </div>
   )
 }
-
 
