@@ -2,6 +2,7 @@
 import { getSupabase } from '@/lib/supabase'
 import { Service, ServiceItem } from '@/type'
 import BookingClient from './BookingClient'
+import { Suspense } from 'react'
 
 async function getServices(): Promise<Service[]> {
   const supabase = getSupabase()
@@ -26,5 +27,9 @@ async function getServiceItems(): Promise<ServiceItem[]> {
 
 export default async function BookingPage() {
   const [services, serviceItems] = await Promise.all([getServices(), getServiceItems()])
-  return <BookingClient services={services} serviceItems={serviceItems} />
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#fdf8f5]" />}>
+      <BookingClient services={services} serviceItems={serviceItems} />
+    </Suspense>
+  )
 }
