@@ -11,6 +11,7 @@ export function ServiceCard({
   items: ServiceItem[]
 }) {
   const [openUpward, setOpenUpward] = useState(false)
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
 
   const updatePanelDirection = useCallback((el: HTMLDivElement | null) => {
     if (!el) return
@@ -24,13 +25,26 @@ export function ServiceCard({
   return (
     <div
       tabIndex={0}
+      role={items.length > 0 ? "button" : undefined}
+      aria-expanded={items.length > 0 ? isDetailsOpen : undefined}
       className="group relative bg-white border border-rose-100 rounded-2xl p-6 hover:border-rose-300 hover:shadow-lg focus:outline-none focus:border-rose-300 focus:shadow-lg transition-all duration-300"
       ref={updatePanelDirection}
       onMouseEnter={(e) => updatePanelDirection(e.currentTarget)}
       onFocus={(e) => updatePanelDirection(e.currentTarget)}
+      onClick={() => {
+        if (items.length === 0) return
+        setIsDetailsOpen((prev) => !prev)
+      }}
+      onKeyDown={(e) => {
+        if (items.length === 0) return
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          setIsDetailsOpen((prev) => !prev)
+        }
+      }}
     >
       <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
-        <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-rose-50 group-hover:bg-rose-100 transition-colors" />
+        <div className={`absolute top-2 right-2 w-8 h-8 rounded-full transition-colors ${isDetailsOpen ? "bg-rose-100" : "bg-rose-50"}`} />
       </div>
       <h3
         className="text-xl mb-2 text-stone-800"
@@ -52,16 +66,23 @@ export function ServiceCard({
           ${service.price}
         </span>
       </div>
+      {items.length > 0 && (
+        <p className="mt-3 text-[11px] tracking-[1.5px] uppercase text-rose-400">
+          click for details
+        </p>
+      )}
 
       {items.length > 0 && (
         <div
-          className={`absolute left-4 right-4 z-20 opacity-0 transition-all duration-200 group-hover:opacity-100 group-focus-within:opacity-100 ${
+          className={`absolute left-4 right-4 z-20 transition-all duration-200 ${
+            isDetailsOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          } ${
             openUpward
-              ? "bottom-[calc(100%-8px)] translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0"
-              : "top-[calc(100%-8px)] translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0"
+              ? `bottom-[calc(100%-8px)] ${isDetailsOpen ? "translate-y-0" : "translate-y-1"}`
+              : `top-[calc(100%-8px)] ${isDetailsOpen ? "translate-y-0" : "translate-y-1"}`
           }`}
         >
-          <div className="rounded-xl border border-rose-100 bg-white shadow-xl p-3 pointer-events-auto">
+          <div className="rounded-xl border border-rose-100 bg-white shadow-xl p-3">
             <p className="text-[10px] tracking-[2px] uppercase text-rose-400 mb-2">
               Service Details
             </p>
