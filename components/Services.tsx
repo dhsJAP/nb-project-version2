@@ -1,9 +1,14 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import { ServiceCard } from "./ServiceCard";
 import { ServicesProps } from "@/type";
 
 
 export function Services({ services, serviceItemsByServiceId }: ServicesProps) {
+  const [openServiceId, setOpenServiceId] = useState<number | null>(null)
+
   return (
         <section id="services" className="py-20 bg-[#fdf8f5]">
         <div className="max-w-6xl mx-auto px-5">
@@ -23,6 +28,10 @@ export function Services({ services, serviceItemsByServiceId }: ServicesProps) {
                 key={s.id}
                 service={s}
                 items={serviceItemsByServiceId[s.id] ?? []}
+                isDetailsOpen={openServiceId === s.id}
+                onToggleDetails={() => {
+                  setOpenServiceId((prev) => (prev === s.id ? null : s.id))
+                }}
               />
             ))}
           </div>

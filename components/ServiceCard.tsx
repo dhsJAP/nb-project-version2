@@ -6,12 +6,15 @@ import { Service, ServiceItem } from "@/type";
 export function ServiceCard({
   service,
   items,
+  isDetailsOpen,
+  onToggleDetails,
 }: {
   service: Service
   items: ServiceItem[]
+  isDetailsOpen: boolean
+  onToggleDetails: () => void
 }) {
   const [openUpward, setOpenUpward] = useState(false)
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
 
   const updatePanelDirection = useCallback((el: HTMLDivElement | null) => {
     if (!el) return
@@ -33,13 +36,13 @@ export function ServiceCard({
       onFocus={(e) => updatePanelDirection(e.currentTarget)}
       onClick={() => {
         if (items.length === 0) return
-        setIsDetailsOpen((prev) => !prev)
+        onToggleDetails()
       }}
       onKeyDown={(e) => {
         if (items.length === 0) return
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault()
-          setIsDetailsOpen((prev) => !prev)
+          onToggleDetails()
         }
       }}
     >
