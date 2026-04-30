@@ -7,7 +7,7 @@ import { ServicesProps } from "@/type";
 
 
 export function Services({ services, serviceItemsByServiceId }: ServicesProps) {
-  const [openServiceId, setOpenServiceId] = useState<number | null>(null)
+  const [openServiceId, setOpenServiceId] = useState<string | null>(null)
 
   return (
         <section id="services" className="py-20 bg-[#fdf8f5]">
