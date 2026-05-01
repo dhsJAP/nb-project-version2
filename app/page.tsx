@@ -8,7 +8,7 @@ import { Portfolio } from '@/components/Portfolio'
 import { Reviews } from '@/components/Reviews'
 import { Banner } from '@/components/Banner'
 import { Footer } from '@/components/Footer'
-import { Service, Review, ServiceItem } from '@/type'
+import { Service, ServiceItem } from '@/type'
 import { FALLBACK_REVIEWS } from '@/constants/mockData'
 import { getStaffMembers } from '@/lib/staff'
 
@@ -47,34 +47,21 @@ async function getServiceItems(): Promise<ServiceItem[]> {
   return data ?? []
 }
 
-async function getReviews(): Promise<Review[]> {
-  const supabase = getSupabase()
-  const { data, error } = await supabase
-    .from('reviews')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(3)
 
-  if (error) {
-    console.error('Failed to fetch reviews:', error.message)
-    return []
-  }
-  return data ?? []
-}
 
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function HomePage() {
-  const [services, serviceItems, reviews, staff] = await Promise.all([
+  const [services, serviceItems, staff] = await Promise.all([
     getServices(),
     getServiceItems(),
-    getReviews(),
+   
     getStaffMembers(),
   ])
 
   const displayServices = services
-  const displayReviews  = reviews.length  > 0 ? reviews  : FALLBACK_REVIEWS
+  const displayReviews  = FALLBACK_REVIEWS
   const serviceItemsByServiceId = serviceItems.reduce<Record<string, ServiceItem[]>>(
     (acc, item) => {
       const list = acc[item.service_id] ?? []
