@@ -10,7 +10,7 @@ const resend = new Resend(process.env.RESEND_API_KEY) // 2. Khởi tạo Resend
 export async function POST(req: NextRequest) {
   const supabase = getSupabase()
   const body = await req.json()
-  const { serviceId, date, time, customerName, customerEmail, paymentMode, price } = body
+  const { serviceId, staffId, date, time, customerName, customerEmail, paymentMode, price } = body
 
   try {
     // Tạo Stripe PaymentIntent
@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
     // Lưu vào Supabase
     const { data, error } = await supabase.from('bookings').insert({
       service_id: serviceId,
+      staff_id: staffId,
       booking_date: date,
       booking_time: time,
       customer_name: customerName,
@@ -42,17 +43,18 @@ export async function POST(req: NextRequest) {
       subject: `Xác nhận lịch hẹn: ${customerName}`,
       html: `
         <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px;">
-          <h2 style="color: #e11d48;">Cảm ơn bạn đã đặt lịch!</h2>
-          <p>Chào <strong>${customerName}</strong>,</p>
-          <p>Lịch hẹn làm đẹp của bạn đã được ghi nhận thành công với các thông tin sau:</p>
+          <h2 style="color: #e11d48;">Thank You For Booking With Us!</h2>
+          <p>Hello <strong>${customerName}</strong>,</p>
+          <p>Your beauty appointment has been successfully booked with the following details:</p>
           <hr style="border: none; border-top: 1px solid #eee;" />
-          <p>📅 <strong>Ngày:</strong> ${date}</p>
-          <p>⏰ <strong>Giờ:</strong> ${time}</p>
-          <p>💰 <strong>Hình thức:</strong> ${paymentMode === 'deposit' ? 'Đặt cọc $15' : 'Thanh toán đủ'}</p>
+          <p>📅 <strong>Date:</strong> ${date}</p>
+          <p>⏰ <strong>Time:</strong> ${time}</p>
+          <p>💇 <strong>Stylistician:</strong> ${staffId}</p>
+          <p>💰 <strong>Payment Method:</strong> ${paymentMode === 'deposit' ? 'Deposit $15' : 'Full Payment'}</p>
           <hr style="border: none; border-top: 1px solid #eee;" />
-          <p>Vui lòng có mặt trước 5 phút để trải nghiệm dịch vụ tốt nhất nhé.</p>
-          <p>Hẹn gặp lại bạn tại salon!</p>
-          <p style="font-size: 12px; color: #999;">Đây là email tự động, vui lòng không phản hồi email này.</p>
+          <p>Please be present 5 minutes before your appointment for the best service experience.</p>
+          <p>We look forward to seeing you at the salon!</p>
+          <p style="font-size: 12px; color: #999;">This is an automated email, please do not reply to this message.</p>
         </div>
       `,
     })
