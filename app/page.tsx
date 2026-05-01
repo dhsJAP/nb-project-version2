@@ -10,7 +10,8 @@ import { Banner } from '@/components/Banner'
 import { Footer } from '@/components/Footer'
 import { Service, Review, ServiceItem } from '@/type'
 import { FALLBACK_REVIEWS } from '@/constants/mockData'
-import { StaffMember } from '@/type'
+import { getStaffMembers } from '@/lib/staff'
+
 
 export const dynamic = 'force-dynamic'
 
@@ -61,21 +62,6 @@ async function getReviews(): Promise<Review[]> {
   return data ?? []
 }
 
-async function getStaff(): Promise<StaffMember[]> {
-  const supabase = getSupabase()
-  const { data, error } = await supabase
-    .from('staff')
-    .select('id, name, role, image_url')
-    .eq('is_active', true)
-    .order('created_at', { ascending: true })
-
-  if (error) {
-    console.error('Failed to fetch staff:', error.message)
-    return []
-  }
-  return data ?? []
-}
-
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -84,7 +70,7 @@ export default async function HomePage() {
     getServices(),
     getServiceItems(),
     getReviews(),
-    getStaff(),
+    getStaffMembers(),
   ])
 
   const displayServices = services
