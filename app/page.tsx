@@ -56,7 +56,6 @@ export default async function HomePage() {
   const [services, serviceItems, staff] = await Promise.all([
     getServices(),
     getServiceItems(),
-   
     getStaffMembers(),
   ])
 

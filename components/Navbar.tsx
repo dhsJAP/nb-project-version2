@@ -17,6 +17,7 @@ export function Navbar() {
             {[
               { href: '/',          label: 'Home page' },
               { href: '#services',  label: 'Price list'  },
+              { href: '#staff',     label: 'Our staff'   },
               { href: '#reviews',   label: 'Reviews'  },
             ].map(({ href, label }) => (
               <Link
