@@ -8,7 +8,7 @@ import { StaffMember } from '@/type'
 export function StaffSection({ staff }: { staff: StaffMember[] }) {
   return (
     
-    <section className="py-24 bg-[#fdf8f5]">
+    <section id="staff" className="py-24 bg-[#fdf8f5]">
       <div className="max-w-6xl mx-auto px-5">
         <div className="text-center mb-10">
           <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-3">Our Staff</p>

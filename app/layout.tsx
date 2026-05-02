@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} ${dmSans.variable} h-full antialiased ${cormorant.variable} ${dmSans.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} ${dmSans.variable} h-full antialiased ${cormorant.variable} ${dmSans.variable} scroll-smooth`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
