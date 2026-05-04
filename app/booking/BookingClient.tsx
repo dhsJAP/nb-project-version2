@@ -227,14 +227,15 @@ export default function BookingClient({ services, serviceItems, staff }: { servi
         {step === 2 && <div className="space-y-5">
           <div className="bg-white rounded-2xl border border-stone-100 p-5">
             <h2 className="text-lg text-stone-700 mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>Choose Your Staff</h2>
-            <div className="grid sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-5 gap-4">
               {staff.map((member) => (
                 <button
                   key={member.id}
                   onClick={() => setForm((prev) => ({ ...prev, staffId: member.id }))}
+                  onDoubleClick={() => canGoStep3 && setStep(3)}
                   className={`text-left rounded-2xl border-2 p-3 transition-all ${form.staffId === member.id ? 'border-rose-400 bg-rose-50' : 'border-stone-100 hover:border-rose-200'}`}
                 >
-                  <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-stone-100 mb-3">
+                  <div className="relative aspect-square rounded-xl overflow-hidden bg-stone-100 mb-3">
                     <Image src={member.image_url || '/images/boss.png'} alt={member.name} fill className="object-cover" />
                   </div>
                   <p className="text-sm text-stone-800 font-medium">{member.name}</p>
