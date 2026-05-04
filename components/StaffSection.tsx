@@ -18,11 +18,11 @@ export function StaffSection({ staff }: { staff: StaffMember[] }) {
         </div>
         <div className="grid grid-cols-5 gap-6">
           {staff.map((member) => (
-            <article key={member.id} className="bg-white border border-rose-100 rounded-2xl p-4">
-              <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-rose-50 mb-4">
+            <article key={member.id} className="bg-white border border-rose-100 rounded-2xl p-3">
+              <div className="relative aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                 <Image src={member.image_url || ""} alt={member.name} fill className="object-cover" />
               </div>
-              <h3 className="text-lg text-stone-800" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
+              <h3 className="text-lg text-stone-800 leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
                 {member.name}
               </h3>
               <p className="text-sm text-stone-500 mt-1">{member.role}</p>
