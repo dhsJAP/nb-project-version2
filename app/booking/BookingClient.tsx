@@ -265,6 +265,17 @@ export default function BookingClient({ services, serviceItems, staff }: { servi
                 </div>
               ))}
             </div>
+            {form.staffId && (
+              <p className="text-[10px] text-rose-400 uppercase tracking-widest mb-1 mt-4">Staff</p>
+            )}
+            {form.staffId && (
+              <div className="flex items-center gap-3">
+                <div className="relative w-12 h-12 rounded-full overflow-hidden bg-stone-100">
+                  <Image src={staff.find((member) => member.id === form.staffId)?.image_url || '/images/boss.png'} alt={staff.find((member) => member.id === form.staffId)?.name || 'Staff member'} fill className="object-cover" />
+                </div>
+                <p className="text-sm text-stone-600">{staff.find((member) => member.id === form.staffId)?.name}</p>
+              </div>
+            )}
           </div>         
           <div className="grid sm:grid-cols-2 gap-4 mb-6"><MiniCalendar selectedDate={form.date} onSelect={(iso) => setForm((prev) => ({ ...prev, date: iso, time: null }))} /><TimeSlots selectedDate={form.date} selectedTime={form.time} onSelect={(t) => setForm((prev) => ({ ...prev, time: t }))} /></div>
           <div className="bg-white rounded-2xl border border-stone-100 p-4 mb-6"><label className="block text-xs text-stone-500 mb-1.5">Notes (optional)</label><textarea rows={3} value={form.notes} onChange={(e) => setForm((prev) => ({ ...prev, notes: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm placeholder:font-semibold placeholder:text-stone-500 focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /></div>
