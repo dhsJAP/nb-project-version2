@@ -188,7 +188,7 @@ export default function BookingClient({ services, serviceItems, staff }: { servi
 
   const totalPrice = selectedItems.reduce((sum, item) => sum + (item.price ?? 0), 0)
   const totalDuration = selectedItems.reduce((sum, item) => sum + (item.duration_minutes ?? 0), 0)
-  const payAmount = form.paymentMode === 'deposit' ? 15 : totalPrice
+  const payAmount = form.paymentMode === 'deposit' ? Math.round(totalPrice * 0.3) : totalPrice
 
   const toggleItem = (itemId: string) => setSelectedItemIds((prev) => (prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]))
   const canGoStep2 = selectedItemIds.length > 0
