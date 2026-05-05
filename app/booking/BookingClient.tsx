@@ -290,10 +290,96 @@ export default function BookingClient({ services, serviceItems, staff }: { servi
           <div className="flex justify-between pt-2"><button onClick={() => setStep(3)} className="px-6 py-3 rounded-full text-sm text-stone-400 border border-rose-200 hover:text-rose-500 hover:bg-rose-50 transition-colors">Back</button><button onClick={handleSubmit} disabled={!canConfirm || loading} className={`px-8 py-3.5 rounded-full text-sm font-medium ${canConfirm && !loading ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'bg-stone-100 text-stone-300'}`}>{loading ? 'Processing...' : `CONFIRM $${payAmount}`}</button></div>
         </div>}
 
-        {step === 5 && <div className="text-center"><div className="w-20 h-20 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-6 text-3xl">?</div><p className="text-stone-500 mb-8 leading-relaxed">Thank you <strong>{form.name}</strong>. Your booking has been confirmed.</p><div className="bg-white rounded-2xl border border-rose-100 p-6 text-left max-w-sm mx-auto mb-8"><p className="text-sm text-stone-700 mb-2">Services:</p>{selectedItems.map((item) => <p key={item.id} className="text-xs text-stone-500">� {serviceById[item.service_id]?.name}: {item.name}</p>)}<p className="text-xs text-stone-500 mt-3">Staff: {staff.find((member) => member.id === form.staffId)?.name ?? '-'}</p><p className="text-xs text-stone-500 mt-1">Date: {form.date ? formatDate(form.date) : '-'}</p><p className="text-xs text-stone-500">Time: {form.time ? formatTime(form.time) : '-'}</p></div><div className="flex gap-3 justify-center"><Link href="/" className="px-6 py-3 rounded-full border border-rose-200 text-rose-600 text-sm hover:bg-rose-50">Home</Link><button onClick={() => { setStep(1); setSelectedItemIds([]); setForm({ date: null, time: null, staffId: null, paymentMode: 'deposit', name: '', email: '', phone: '', cardNumber: '', cardExpiry: '', cardCvc: '', cardName: '', notes: '' }) }} className="px-6 py-3 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-sm">New booking</button></div></div>}
+        {step === 5 && (
+  <div className="text-center">
+    <div className="w-20 h-20 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-6 text-3xl">
+      ✓
+    </div>
+
+    <p className="text-stone-500 mb-8 leading-relaxed">
+      Thank you <strong>{form.name}</strong>. Your booking has been confirmed.
+    </p>
+
+    <div className="bg-white rounded-2xl border border-rose-100 p-6 text-left max-w-sm mx-auto mb-8">
+      <p className="text-sm text-stone-700 mb-2">Services:</p>
+
+      <div className="space-y-2">
+        {Object.entries(groupedSelection).map(([serviceId, items]) => (
+          <div key={serviceId}>
+            <p className="text-sm text-stone-700 font-medium">
+              {serviceById[serviceId]?.name ?? "Service"}
+            </p>
+
+            <div className="mt-0.5 space-y-0.5 pl-4">
+              {items.map((item) => (
+                <p key={item.id} className="text-sm text-stone-600">
+                  {item.name}
+                </p>
+              ))}
+            </div>
+          </div>
+          ))}
       </div>
 
-      {openServiceId && serviceById[openServiceId] && <ServicesModal service={serviceById[openServiceId]} items={itemsByServiceId[openServiceId] ?? []} selectedItemIds={new Set(selectedItemIds)} onToggleItem={toggleItem} onClose={() => setOpenServiceId(null)} />}
+      <p className="text-xs text-stone-500 mt-3">
+        Staff: {staff.find((member) => member.id === form.staffId)?.name ?? "-"}
+      </p>
+
+      <p className="text-xs text-stone-500 mt-1">
+        Date: {form.date ? formatDate(form.date) : "-"}
+      </p>
+
+      <p className="text-xs text-stone-500">
+        Time: {form.time ? formatTime(form.time) : "-"}
+      </p>
+    </div>
+
+    <div className="flex gap-3 justify-center">
+      <Link
+        href="/"
+        className="px-6 py-3 rounded-full border border-rose-200 text-rose-600 text-sm hover:bg-rose-50"
+      >
+        Home
+      </Link>
+
+      <button
+        onClick={() => {
+          setStep(1)
+          setSelectedItemIds([])
+
+          setForm({
+            date: null,
+            time: null,
+            staffId: null,
+            paymentMode: "deposit",
+            name: "",
+            email: "",
+            phone: "",
+            cardNumber: "",
+            cardExpiry: "",
+            cardCvc: "",
+            cardName: "",
+            notes: "",
+          })
+        }}
+        className="px-6 py-3 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-sm"
+      >
+        New booking
+      </button>
+    </div>
+  </div>
+)}
+
+{openServiceId && serviceById[openServiceId] && (
+  <ServicesModal
+    service={serviceById[openServiceId]}
+    items={itemsByServiceId[openServiceId] ?? []}
+    selectedItemIds={new Set(selectedItemIds)}
+    onToggleItem={toggleItem}
+    onClose={() => setOpenServiceId(null)}
+  />
+)}
+      </div>
     </div>
   )
 }
