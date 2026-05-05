@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
   try {
     // Tạo Stripe PaymentIntent
-    const amount = paymentMode === 'deposit' ? 1500 : Math.round(price * 100)
+    const amount = paymentMode === 'deposit' ? Math.round(price *0.3 * 100): Math.round(price * 100)
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: 'usd',
@@ -36,6 +36,15 @@ export async function POST(req: NextRequest) {
 
     if (error) throw new Error(error.message)
 
+    // Lấy thông tin staff
+    const { data: staffData, error: staffError } = await supabase
+      .from('staff')
+      .select('name')
+      .eq('id', staffId)
+      .single()
+
+    if (staffError) throw new Error(staffError.message)
+
     // 3. Gửi Email tự động sau khi lưu DB thành công
     await resend.emails.send({
       from: "Trinh's Nails <onboarding@resend.dev>", // Thay đổi sau khi cậu verify domain
@@ -49,7 +58,7 @@ export async function POST(req: NextRequest) {
           <hr style="border: none; border-top: 1px solid #eee;" />
           <p>📅 <strong>Date:</strong> ${date}</p>
           <p>⏰ <strong>Time:</strong> ${time}</p>
-          <p>💇 <strong>Stylistician:</strong> ${staffId}</p>
+          <p>💇 <strong>Stylistician:</strong> ${staffData.name}</p>
           <p>💰 <strong>Payment Method:</strong> ${paymentMode === 'deposit' ? 'Deposit $15' : 'Full Payment'}</p>
           <hr style="border: none; border-top: 1px solid #eee;" />
           <p>Please be present 5 minutes before your appointment for the best service experience.</p>

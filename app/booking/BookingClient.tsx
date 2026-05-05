@@ -292,7 +292,7 @@ export default function BookingClient({ services, serviceItems, staff }: { servi
 
         {step === 5 && (
   <div className="text-center">
-    <div className="w-20 h-20 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-6 text-3xl">
+    <div className="w-20 h-20 rounded-full bg-rose-500 flex items-center justify-center mx-auto mb-6 text-3xl">
       ✓
     </div>
 
