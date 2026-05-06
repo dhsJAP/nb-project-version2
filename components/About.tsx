@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 
 export function About() {
   return (
-    <section className="py-24 bg-[#f5f1ee]">
+    <section className="py-24 bg-[#f5f1ee] relative overflow-hidden">
+      <div className="absolute top-20 left-20 w-72 h-72 bg-pink-200/30 blur-[120px] pointer-events-none" />
       <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">
         
         {/* Image */}
@@ -32,7 +33,10 @@ export function About() {
               src="/images/boss-nail.png"
               alt="Trinh"
               fill
-              className="object-cover"
+              className="object-cover
+              hover:scale-[1.02]
+              transition-transform 
+              duration-700 ease-out"
             />
           </motion.div>
 
@@ -85,15 +89,14 @@ export function About() {
             </h2>
 
           <p className="text-stone-500 leading-relaxed mb-4">
-            With over 7 years of experience in the nail art industry,
-            I don&apos;t just beautify hands — I create works of art
-            that bear the unique personal touch of each client.
+            For more than 7 years, I’ve been helping clients express themselves through elegant and carefully crafted nail designs. 
+            I believe great nails are more than just beauty
+             — they&apos;re a form of confidence and self-expression.
           </p>
 
           <p className="text-stone-500 leading-relaxed mb-8">
-            Every appointment is a relaxing and creative experience.
-            I commit to using high-quality, safe materials and the
-            most meticulous techniques.
+            My goal is to create a calm, welcoming experience where every client can relax and enjoy a personalized service. 
+            From product selection to every small detail, quality and care always come first.
           </p>
 
           <div className="grid grid-cols-3 gap-4">
