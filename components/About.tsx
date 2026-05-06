@@ -17,7 +17,7 @@ export function About() {
     rounded-full
     blur-[140px]
     pointer-events-none
-    -z-10
+    z-0
   "
 />
 
@@ -32,7 +32,7 @@ export function About() {
     rounded-full
     blur-[140px]
     pointer-events-none
-    -z-10
+    z-0
   "
 />
 
