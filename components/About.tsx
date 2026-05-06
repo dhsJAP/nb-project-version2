@@ -6,7 +6,37 @@ import { motion } from "framer-motion";
 export function About() {
   return (
     <section className="py-24 bg-[#f5f1ee] relative overflow-hidden">
-      <div className="absolute top-20 left-20 w-72 h-72 bg-pink-200/30 blur-[120px] pointer-events-none" />
+      <div
+  className="
+    absolute
+    top-10
+    left-10
+    w-[420px]
+    h-[420px]
+    bg-rose-300/50
+    rounded-full
+    blur-[140px]
+    pointer-events-none
+    -z-10
+  "
+/>
+
+<div
+  className="
+    absolute
+    bottom-0
+    right-0
+    w-[380px]
+    h-[380px]
+    bg-amber-200/40
+    rounded-full
+    blur-[140px]
+    pointer-events-none
+    -z-10
+  "
+/>
+
+
       <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">
         
         {/* Image */}
