@@ -1,15 +1,26 @@
+import Image from 'next/image';
+
+const portfolioImages = [
+  "/images/pn1.jpg",
+  "/images/pn2.jpg",
+  "/images/pn3.jpg",
+  "/images/pn4.jpg",
+  "/images/pn5.jpg",
+];
+
+
 export function Portfolio() {
 
-    const PORTFOLIO_ITEMS = [
-  { label: 'Rose Bloom',   bg: 'from-rose-200 to-rose-400' },
-  { label: 'Sky Blue',     bg: 'from-sky-200 to-sky-400' },
-  { label: 'Mint Fresh',   bg: 'from-emerald-200 to-emerald-400' },
-  { label: 'Autumn Gold',  bg: 'from-amber-200 to-amber-400' },
-  { label: 'Lavender',     bg: 'from-purple-200 to-purple-400' },
-  { label: 'Nude Latte',   bg: 'from-stone-200 to-stone-400' },
-]
+
     return (
-        <section className="py-20 bg-white">
+        <section className="py-24 bg-[#f5f1ee] overflow-hidden relative">
+
+          {/* Gradient Fade Left */}
+      <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-[#f5f1ee] to-transparent z-10" />
+
+      {/* Gradient Fade Right */}
+      <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-[#f5f1ee] to-transparent z-10" />
+
         <div className="max-w-6xl mx-auto px-5">
           <div className="text-center mb-12">
             <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-3">Portfolio</p>
@@ -20,22 +31,54 @@ export function Portfolio() {
               Highlights
             </h2>
           </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {PORTFOLIO_ITEMS.map(({ label, bg }) => (
-              <div
-                key={label}
-                className={`aspect-square rounded-2xl bg-gradient-to-br ${bg} relative overflow-hidden group cursor-pointer`}
-              >
-                {/* Thay bằng ảnh thật: <Image src={`/portfolio/${label}.jpg`} alt={label} fill className="object-cover" /> */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-                <div className="absolute bottom-3 left-3 bg-white/80 backdrop-blur-sm rounded-lg px-2.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <p className="text-xs font-medium text-stone-700">{label}</p>
-                </div>
-              </div>
-            ))}
+        <div className="flex gap-6 animate-marquee w-max">
+        
+        {/* First Set */}
+        {portfolioImages.map((image, index) => (
+          <div
+            key={`first-${index}`}
+            className="group relative overflow-hidden rounded-3xl shrink-0"
+          >
+            <Image
+              src={image}
+              alt="Portfolio Image"
+              width={280}
+              height={360}
+              className="
+                w-[280px]
+                h-[360px]
+                object-cover
+                transition-transform
+                duration-700
+                group-hover:scale-105
+              "
+            />
           </div>
+        ))}
+        {/* Duplicate Set */}
+        {portfolioImages.map((image, index) => (
+          <div
+            key={`second-${index}`}
+            className="group relative overflow-hidden rounded-3xl shrink-0"
+          >
+            <Image
+              src={image}
+              alt="Portfolio Image"
+              width={280}
+              height={360}
+              className="
+                w-[280px]
+                h-[360px]
+                object-cover
+                transition-transform
+                duration-700
+                group-hover:scale-105
+              "
+            />
+          </div>
+        ))}
 
+       </div>
           <p className="text-center mt-6 text-sm text-stone-400">
             Follow{' '}
             <a
