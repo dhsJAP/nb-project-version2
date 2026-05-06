@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export function About() {
   return (
@@ -9,14 +10,31 @@ export function About() {
         
         {/* Image */}
         <div className="relative">
-          <div className="aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-rose-100 to-amber-50 max-w-sm relative">
+          <motion.div
+           animate={{ y: [0, -6, 0] }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+            className="
+              aspect-square
+              rounded-3xl
+              overflow-hidden
+              bg-gradient-to-br
+              from-rose-100
+              to-amber-50
+              max-w-sm
+              relative
+            "
+          >
             <Image
               src="/images/boss-nail.png"
               alt="Trinh"
               fill
               className="object-cover"
             />
-          </div>
+          </motion.div>
 
           {/* Floating Badge */}
           <div
@@ -51,33 +69,20 @@ export function About() {
         <div>
           <p
             className="
-              tracking-[0.35em]
-              uppercase
-              text-pink-500
-              text-xs
+              text-xs tracking-[4px] text-rose-400 uppercase mb-4
             "
           >
             About Us
           </p>
 
-          <h2
-            className="
-              font-serif
-              text-5xl
-              leading-tight
-            "
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontWeight: 600,
-            }}
-          >
-            Hello,
-            <br />
-            I&apos;m{" "}
-            <em className="italic text-pink-500">
-              Trinh Con
-            </em>
-          </h2>
+         <h2
+              className="text-4xl text-stone-800 mb-6 leading-tight"
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}
+            >
+              Hello,
+              <br />
+              I&apos;m <em className="text-rose-600">Trinh Con</em>
+            </h2>
 
           <p className="text-stone-500 leading-relaxed mb-4">
             With over 7 years of experience in the nail art industry,
@@ -111,7 +116,10 @@ export function About() {
               backdrop-blur
               rounded-2xl
               p-5
-              shadow-sm"
+              shadow-sm
+              hover:-translate-y-1 
+              transition-all 
+              duration-300"
               >
                 <p
                   className="text-3xl text-rose-600 leading-none"
