@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export function About() {
   return (
-    <section className="py-24 bg-[#f5f1ee] relative overflow-hidden">
+    <section className="py-24 bg-[#f5f1ee] relative">
       <div
   className="
     absolute
