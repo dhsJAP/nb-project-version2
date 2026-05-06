@@ -44,13 +44,13 @@ export function Hero() {
             <div className="mt-2 flex gap-3 flex-wrap">
               <Link
                 href="/booking"
-                className="bg-rose-700 hover:bg-rose-800 text-white px-8 py-3.5 rounded-2xl font-medium transition-all hover:scale-[1.02] active:scale-[0.98] text-sm tracking-wide"
+                className="inline-block bg-rose-500 hover:bg-rose-600 text-white px-10 py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] text-sm"
               >
                 Book now
               </Link>
               <Link
                 href="#services"
-                className="border border-rose-600 text-rose-600 hover:bg-rose-50 px-8 py-3.5 rounded-2xl font-medium transition-colors text-sm"
+                className="inline-block bg-rose-500 hover:bg-rose-600 text-white px-10 py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] text-sm"
               >
                 price list
               </Link>

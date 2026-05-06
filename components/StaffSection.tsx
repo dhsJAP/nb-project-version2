@@ -18,7 +18,7 @@ export function StaffSection({ staff }: { staff: StaffMember[] }) {
         </div>
         <div className="grid grid-cols-5 gap-6">
           {staff.map((member) => (
-            <article key={member.id} className="bg-white border border-rose-100 rounded-2xl p-3">
+            <article key={member.id} className="bg-white border border-rose-100 rounded-2xl p-3 hover:-translate-y-1 transition-all duration-300">
               <div className="relative aspect-square rounded-xl overflow-hidden bg-rose-50 mb-3">
                 <Image src={member.image_url || ""} alt={member.name} fill className="object-cover" />
               </div>
