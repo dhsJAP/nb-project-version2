@@ -49,7 +49,7 @@ export function Hero() {
               </Link>
               <Link
                 href="#services"
-                className="inline-block bg-rose-500 hover:bg-rose-600 text-white px-10 py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] text-sm"
+                className="inline-block border border-rose-500 text-rose-600 hover:bg-rose-50 px-10 py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] text-sm"
               >
                 price list
               </Link>
