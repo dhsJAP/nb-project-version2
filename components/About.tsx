@@ -76,15 +76,11 @@ export function About() {
               absolute
               bottom-5
               -right-5
-              bg-white
-              shadow-xl
-              rounded-2xl
-              px-5
-              py-4
+              hover:scale-105
             "
           >
             <p
-              className="text-3xl leading-none text-rose-600"
+              className="text-3xl leading-none text-rose-600 hover:text-rose-700 transition-colors duration-300"
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontWeight: 600,
@@ -145,14 +141,11 @@ export function About() {
               },
             ].map(({ number, label }) => (
               <div key={label}
-              className="bg-white/70
-              backdrop-blur
-              rounded-2xl
-              p-5
-              shadow-sm
-              hover:-translate-y-1 
+              className="
+              hover:scale-105 
               transition-all 
-              duration-300"
+              duration-300
+              hover:text-rose-700"
               >
                 <p
                   className="text-3xl text-rose-600 leading-none"
