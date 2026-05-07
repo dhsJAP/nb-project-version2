@@ -1,25 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+
 
 
 export function Hero() {
     return (
-        <section className="relative min-h-[90vh] flex items-center">
-        <div
-          className="absolute inset-0 opacity-50"
-        >
-          <Image src="/images/hero-nail2.jpg" 
-          alt="Hero" 
-          fill 
-          className="object-cover"
-          preload={true}
-          sizes="100vw" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent pointer-events-none" />
-        <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-rose-100 to-pink-50 blur-3xl opacity-60" />
-        <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-gradient-to-tr from-amber-50 to-rose-50 blur-3xl opacity-50" />
+        <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        <video
+    autoPlay
+    muted
+    loop
+    playsInline
+    className="absolute inset-0 w-full h-full object-cover"
+  >
+    <source src="/videos/heroclip.mp4" type="video/mp4" />
+  </video>
 
         <div className="relative z-10 max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center py-24">
           
