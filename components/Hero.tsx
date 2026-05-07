@@ -14,13 +14,13 @@ export function Hero() {
     playsInline
     className="absolute inset-0 w-full h-full object-cover"
   >
-    <source src="/videos/heroclip.mp4" type="video/mp4" />
+    <source src="/videos/hero.mp4" type="video/mp4" />
   </video>
 
   <div className="absolute inset-0 bg-black/40" />
 
   <div className="relative z-10">
-      <div className="relative z-10 max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center py-24">
+      <div className="relative z-10 max-w-6xl mx-auto px-5 flex items-center justify-center gap-12 items-center py-24">
           
           <div>
             <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-5">
