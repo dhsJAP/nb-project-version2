@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export function About() {
   return (
-    <section className="pt-24 pb-0 bg-[#f5f1ee] relative">
+    <section className="pt-12 pb-0 bg-[#f5f1ee] relative">
 
 
       <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">

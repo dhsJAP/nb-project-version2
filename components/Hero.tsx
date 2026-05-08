@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export function Hero() {
     return (
-        <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        <section className="relative min-h-[80vh] flex items-center overflow-hidden">
         <video
     autoPlay
     muted
@@ -19,10 +19,10 @@ export function Hero() {
 
   <div className="absolute inset-0 bg-black/40" />
 
-  <div className="relative z-10">
-      <div className="relative z-10 max-w-6xl mx-auto px-5 flex items-center justify-center gap-12 items-center py-24">
+  <div className="relative z-10 w-full">
+      <div className="max-w-6xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-12 py-20">
           
-          <div>
+          <div className="max-w-2xl">
             <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-5">
               Premium Nail Studio
             </p>
