@@ -20,7 +20,7 @@ export function About() {
             duration: 0.35,
             ease: "easeOut",
           }}
-          className="relative w-full h-[600px] pb-10"
+          className="relative w-full h-[520px]"
         >
           <Image
             src="/images/boss2.png"
