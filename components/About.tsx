@@ -16,10 +16,13 @@ export function About() {
             scale: 1.04,
             rotate: -1,
           }}
+          initial={{ opacity: 0, scale : 0.95 }}
+          whileInView={{ opacity: 1, scale : 1 }}
           transition={{
-            duration: 0.35,
+            duration: 0.8,
             ease: "easeOut",
           }}
+          viewport={{ once: true }}
           className="relative w-full h-[520px]"
         >
           <Image
@@ -33,7 +36,12 @@ export function About() {
         </motion.div>
 
         {/* Content */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
           <p
             className="
               text-xs tracking-[4px] text-rose-400 uppercase mb-4
@@ -101,7 +109,7 @@ export function About() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
