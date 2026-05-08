@@ -28,9 +28,9 @@ export function StaffSection({ staff }: { staff: StaffMember[] }) {
         </motion.div>
 
         <motion.div
-        initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1],delay: 0.4}}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1],delay: 0.2}}
            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {staff.map((member) => (
             <article key={member.id} className="bg-white border border-rose-100 rounded-2xl p-3 hover:-translate-y-1 transition-all duration-300">

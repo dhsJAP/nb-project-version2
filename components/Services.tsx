@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ServiceCard } from "./ServiceCard";
 import { ServicesProps } from "@/type";
+import { motion } from "framer-motion";
 
 
 export function Services({ services, serviceItemsByServiceId }: ServicesProps) {
@@ -12,7 +13,14 @@ export function Services({ services, serviceItemsByServiceId }: ServicesProps) {
   return (
         <section id="services" className="py-20 bg-[#fdf8f5]">
         <div className="max-w-6xl mx-auto px-5">
-          <div className="text-center mb-12">
+          <motion.div
+          initial={{ opacity: 0, scale : 0.95 }}
+          whileInView={{ opacity: 1, scale : 1 }}
+          transition={{
+            duration: 1.6,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="text-center mb-12">
             <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-3">Services</p>
             <h2
               className="text-4xl text-stone-800"
@@ -20,9 +28,13 @@ export function Services({ services, serviceItemsByServiceId }: ServicesProps) {
             >
               Price List
             </h2>
-          </div>
+          </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1],delay: 0.2}}
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {services.map((s) => (
               <ServiceCard
                 key={s.id}
@@ -34,7 +46,7 @@ export function Services({ services, serviceItemsByServiceId }: ServicesProps) {
                 }}
               />
             ))}
-          </div>
+          </motion.div>
 
           <div className="text-center mt-10">
             <Link
