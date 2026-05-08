@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export function Hero() {
     return (
-        <section className="relative min-h-[80vh] flex items-center overflow-hidden">
+        <section className="relative min-h-[100vh] flex items-center overflow-hidden">
         <video
     autoPlay
     muted
