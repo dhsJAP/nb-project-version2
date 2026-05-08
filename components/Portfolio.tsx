@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 const portfolioImages = [
   "/images/pn1.jpg",
@@ -22,7 +23,14 @@ export function Portfolio() {
       <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-[#f5f1ee] to-transparent z-10" />
 
       <div className="max-w-6xl mx-auto px-5">
-          <div className="text-center mb-12">
+          <motion.div
+          initial={{ opacity: 0, scale : 0.95 }}
+          whileInView={{ opacity: 1, scale : 1 }}
+          transition={{
+            duration: 1.6,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="text-center mb-12">
             <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-3">Portfolio</p>
             <h2
               className="text-4xl text-stone-800"
@@ -30,12 +38,21 @@ export function Portfolio() {
             >
               Highlights
             </h2>
-          </div>
-         <div className="flex gap-6 animate-marquee w-max">
+          </motion.div>
+          
+         <div
+          className="flex gap-6 animate-marquee w-max">
         
               {/* First Set */}
               {portfolioImages.map((image, index) => (
-                <div
+                <motion.div
+                 whileHover={{
+                      y: -8,
+                    }}
+                    transition={{
+                      duration: 0.4,
+                      ease: "easeOut",
+                    }}
                   key={`first-${index}`}
                   className="group relative overflow-hidden rounded-3xl shrink-0"
                 >
@@ -53,11 +70,18 @@ export function Portfolio() {
                       group-hover:scale-105
                     "
                   />
-                </div>
+                </motion.div>
               ))}
               {/* Duplicate Set */}
               {portfolioImages.map((image, index) => (
-                <div
+                <motion.div
+                 whileHover={{
+                      y: -8,
+                    }}
+                    transition={{
+                      duration: 0.4,
+                      ease: "easeOut",
+                    }}
                   key={`second-${index}`}
                   className="group relative overflow-hidden rounded-3xl shrink-0"
                 >
@@ -75,10 +99,10 @@ export function Portfolio() {
                       group-hover:scale-105
                     "
                   />
-                </div>
+                </motion.div>
               ))}
-
-                </div>
+           </div>
+           
                 <p className="text-center mt-6 text-sm text-stone-400">
                   Follow{' '}
                   <a
