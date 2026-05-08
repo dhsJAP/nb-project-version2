@@ -5,18 +5,18 @@ import Image from "next/image";
 
 export function About() {
   return (
-    <section className="py-24 bg-[#f5f1ee] relative">
+    <section className="pt-24 pb-0 bg-[#f5f1ee] relative">
 
 
       <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">
         
         {/* Image */}
-      <div className="relative w-full aspect-[4/5] overflow-hidden rounded-2xl shadow-lg">
+      <div className="relative w-full aspect-[4/5] flex items-end">
     <Image
       src="/images/boss2.png" // Đường dẫn ảnh của cha
       alt="About Us"
       fill
-      className="object-cover" // Giúp ảnh lấp đầy khung mà không bị méo
+      className="object-contain object-left-bottom drop-shadow-2xl" // Giúp ảnh lấp đầy khung mà không bị méo
       sizes="(max-width: 768px) 100vw, 50vw"
       priority
     />
