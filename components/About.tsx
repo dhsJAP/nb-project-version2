@@ -22,7 +22,6 @@ export function About() {
             duration: 1.6,
             ease: [0.16, 1, 0.3, 1],
           }}
-          viewport={{ once: true }}
           className="relative w-full h-[520px]"
         >
           <Image
@@ -41,7 +40,6 @@ export function About() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4
            }}
-          viewport={{ once: true }}
         >
           <p
             className="
