@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 
 export function About() {
@@ -11,16 +12,27 @@ export function About() {
       <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">
         
         {/* Image */}
-      <div className="relative w-full aspect-[4/5] flex items-end">
-    <Image
-      src="/images/boss2.png" // Đường dẫn ảnh của cha
-      alt="About Us"
-      fill
-      className="object-contain object-left-bottom drop-shadow-2xl" // Giúp ảnh lấp đầy khung mà không bị méo
-      sizes="(max-width: 768px) 100vw, 50vw"
-      priority
-    />
-  </div>
+        
+<motion.div
+  whileHover={{
+    scale: 1.04,
+    rotate: -1,
+  }}
+  transition={{
+    duration: 0.35,
+    ease: "easeOut",
+  }}
+  className="relative w-full aspect-[4/5] flex items-end"
+>
+  <Image
+    src="/images/boss2.png"
+    alt="About Us"
+    fill
+    className="object-contain object-left-bottom drop-shadow-2xl"
+    sizes="(max-width: 768px) 100vw, 50vw"
+    priority
+  />
+</motion.div>
 
         {/* Content */}
         <div>
