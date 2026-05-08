@@ -1,99 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+
 
 export function About() {
   return (
     <section className="py-24 bg-[#f5f1ee] relative">
-      <div
-  className="
-    absolute
-    top-10
-    left-10
-    w-[420px]
-    h-[420px]
-    bg-rose-300/50
-    rounded-full
-    blur-[140px]
-    pointer-events-none
-    z-0
-  "
-/>
-
-<div
-  className="
-    absolute
-    bottom-0
-    right-0
-    w-[380px]
-    h-[380px]
-    bg-amber-200/40
-    rounded-full
-    blur-[140px]
-    pointer-events-none
-    z-0
-  "
-/>
 
 
       <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">
         
         {/* Image */}
-        <div className="relative">
-          <motion.div
-           animate={{ y: [0, -6, 0] }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-            className="
-              aspect-square
-              rounded-3xl
-              overflow-hidden
-              bg-gradient-to-br
-              from-rose-100
-              to-amber-50
-              max-w-sm
-              relative
-            "
-          >
-            <Image
-              src="/images/boss-nail.png"
-              alt="Trinh"
-              fill
-              className="object-cover
-              hover:scale-[1.02]
-              transition-transform 
-              duration-700 ease-out"
-            />
-          </motion.div>
-
-          {/* Floating Badge */}
-          <div
-            className="
-              absolute
-              bottom-5
-              -right-5
-              hover:scale-105
-            "
-          >
-            <p
-              className="text-3xl leading-none text-rose-600 hover:text-rose-700 transition-colors duration-300"
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontWeight: 600,
-              }}
-            >
-              7+
-            </p>
-
-            <p className="text-xs uppercase tracking-[0.2em] text-stone-500 mt-1">
-              Years Experience
-            </p>
-          </div>
-        </div>
+      <div className="relative w-full h-[700px]"> 
+        <Image
+          src="/images/boss1.png" 
+          alt="Trinh Con"
+          fill
+          className="object-contain object-left-bottom drop-shadow-[0_20px_50px_rgba(0,0,0,0.1)]"
+        />
+      </div>
 
         {/* Content */}
         <div>
