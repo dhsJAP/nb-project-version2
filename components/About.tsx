@@ -7,32 +7,30 @@ import { motion } from "framer-motion";
 export function About() {
   return (
     <section className="pt-12 pb-0 bg-[#f5f1ee] relative">
-
-
-      <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">
+    <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-16 items-center">
         
         {/* Image */}
         
-<motion.div
-  whileHover={{
-    scale: 1.04,
-    rotate: -1,
-  }}
-  transition={{
-    duration: 0.35,
-    ease: "easeOut",
-  }}
-  className="relative w-full aspect-[4/5] flex items-end"
->
-  <Image
-    src="/images/boss2.png"
-    alt="About Us"
-    fill
-    className="object-contain object-left-bottom drop-shadow-2xl"
-    sizes="(max-width: 768px) 100vw, 50vw"
-    priority
-  />
-</motion.div>
+        <motion.div
+          whileHover={{
+            scale: 1.04,
+            rotate: -1,
+          }}
+          transition={{
+            duration: 0.35,
+            ease: "easeOut",
+          }}
+          className="relative w-full h-[600px]"
+        >
+          <Image
+            src="/images/boss2.png"
+            alt="About Us"
+            fill
+            className="object-contain"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
+          />
+        </motion.div>
 
         {/* Content */}
         <div>
