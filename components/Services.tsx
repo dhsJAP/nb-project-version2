@@ -48,14 +48,18 @@ export function Services({ services, serviceItemsByServiceId }: ServicesProps) {
             ))}
           </motion.div>
 
-          <div className="text-center mt-10">
+          <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1],delay: 0.3}}
+          className="text-center mt-10">
             <Link
               href="/booking"
               className="inline-block bg-rose-500 hover:bg-rose-600 text-white px-10 py-3.5 rounded-full font-medium transition-all hover:scale-[1.02] text-sm"
             >
               Book now
             </Link>
-          </div>
+          </motion.div>
         </div>
       </section>
     );

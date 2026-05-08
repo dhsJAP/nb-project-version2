@@ -31,7 +31,7 @@ export function ServiceCard({
       tabIndex={0}
       role={items.length > 0 ? "button" : undefined}
       aria-expanded={items.length > 0 ? isDetailsOpen : undefined}
-      className="group relative bg-white border border-rose-100 rounded-2xl p-6 hover:border-rose-300 hover:shadow-lg focus:outline-none focus:border-rose-300 focus:shadow-lg transition-all duration-300"
+      className="group relative bg-white border border-rose-100 rounded-2xl p-6 hover:border-rose-300 hover:shadow-lg hover:shadow-rose-100/50 focus:outline-none focus:border-rose-300 focus:shadow-lg transition-all duration-300"
       ref={updatePanelDirection}
       onMouseEnter={(e) => updatePanelDirection(e.currentTarget)}
       onFocus={(e) => updatePanelDirection(e.currentTarget)}
