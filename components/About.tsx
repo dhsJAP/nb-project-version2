@@ -19,8 +19,8 @@ export function About() {
           initial={{ opacity: 0, scale : 0.95 }}
           whileInView={{ opacity: 1, scale : 1 }}
           transition={{
-            duration: 0.8,
-            ease: "easeOut",
+            duration: 1.6,
+            ease: [0.16, 1, 0.3, 1],
           }}
           viewport={{ once: true }}
           className="relative w-full h-[520px]"
@@ -39,7 +39,8 @@ export function About() {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4
+           }}
           viewport={{ once: true }}
         >
           <p
