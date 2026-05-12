@@ -22,7 +22,7 @@ export function About() {
             duration: 1.6,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="relative w-full h-[520px]"
+          className="relative w-full h-[600px]"
         >
           <Image
             src="/images/boss2.png"
