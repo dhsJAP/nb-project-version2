@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 
 
@@ -22,7 +23,12 @@ export function Hero() {
   <div className="relative z-10 w-full">
       <div className="max-w-6xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-12 py-20">
           
-          <div className="max-w-2xl">
+          <motion.div 
+            className="max-w-2xl"
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
             <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-5">
               Premium Nail Studio
             </p>
@@ -72,10 +78,10 @@ export function Hero() {
                     <span key={i} className="text-rose-400 text-sm">★</span>
                   ))}
                 </div>
-                <p className="text-xs text-stone-500 tracking-wider">69+ reviews</p>
+                <p className="text-xs text-black tracking-wider">69+ reviews</p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
   </div>
     </section>
