@@ -19,7 +19,7 @@ export function StaffSection({ staff }: { staff: StaffMember[] }) {
             duration: 1.6,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
           <p className="text-xs tracking-[4px] text-rose-400 uppercase mb-3">Our Staff</p>
           <h2 className="text-4xl text-stone-800" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>
