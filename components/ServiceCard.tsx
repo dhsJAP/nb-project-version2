@@ -78,7 +78,7 @@ export function ServiceCard({
 
       {items.length > 0 && (
         <div
-          className={`absolute left-4 right-4 z-20 transition-all duration-200 ${
+          className={`absolute left-4 right-4 z-50 transition-all duration-200 ${
             isDetailsOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
           } ${
             openUpward
