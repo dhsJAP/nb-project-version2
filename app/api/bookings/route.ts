@@ -10,7 +10,7 @@ const resend = new Resend(process.env.RESEND_API_KEY) // 2. Khởi tạo Resend
 export async function POST(req: NextRequest) {
   const supabase = getSupabase()
   const body = await req.json()
-  const { serviceId, staffId, date, time, customerName, customerEmail, paymentMode, price } = body
+  const { serviceId, staffId, date, time, customerName, customerEmail, paymentMode, price, notes } = body
 
   try {
     // Tạo Stripe PaymentIntent
@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
       customer_email: customerEmail,
       payment_mode: paymentMode,
       stripe_payment_id: paymentIntent.id,
+      notes: notes || null,
       status: 'pending'
     }).select().single()
 
@@ -60,6 +61,7 @@ export async function POST(req: NextRequest) {
           <p>⏰ <strong>Time:</strong> ${time}</p>
           <p>💇 <strong>Stylistician:</strong> ${staffData.name}</p>
           <p>💰 <strong>Payment Method:</strong> ${paymentMode === 'deposit' ? 'Deposit $15' : 'Full Payment'}</p>
+          ${notes ? `<p>📝 <strong>Your Notes:</strong></p><p style="background-color: #f5f5f5; padding: 12px; border-left: 4px solid #e11d48; border-radius: 4px;">${notes}</p>` : ''}
           <hr style="border: none; border-top: 1px solid #eee;" />
           <p>Please be present 5 minutes before your appointment for the best service experience.</p>
           <p>We look forward to seeing you at the salon!</p>
