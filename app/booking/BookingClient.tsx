@@ -24,11 +24,22 @@ type BookingFormState = {
 }
 
 const MOCK_BOOKED_SLOTS: Record<string, string[]> = {}
-const WORK_HOURS = [
-  '09:00', '10:00', '10:30', '11:00', '11:30',
-  '13:00', '13:30', '14:00', '14:30', '15:00',
-  '15:30', '16:00', '16:30', '17:00', '17:30',
-]
+function toMinutes(hhmm: string) {
+  const [h, m] = hhmm.split(':').map(Number)
+  return h * 60 + m
+}
+function minutesToHHMM(total: number) {
+  const h = Math.floor(total / 60)
+  const m = total % 60
+  return `${pad(h)}:${pad(m)}`
+}
+function buildTimeSlots(startHHMM: string, endHHMM: string, stepMinutes = 15) {
+  const start = toMinutes(startHHMM)
+  const end = toMinutes(endHHMM)
+  const slots: string[] = []
+  for (let t = start; t <= end; t += stepMinutes) slots.push(minutesToHHMM(t))
+  return slots
+}
 
 function pad(n: number) { return String(n).padStart(2, '0') }
 function toISO(y: number, m: number, d: number) { return `${y}-${pad(m + 1)}-${pad(d)}` }
@@ -155,12 +166,19 @@ function MiniCalendar({ selectedDate, onSelect }: { selectedDate: string | null;
 
 function TimeSlots({ selectedDate, selectedTime, onSelect }: { selectedDate: string | null; selectedTime: string | null; onSelect: (t: string) => void }) {
   const booked = selectedDate ? (MOCK_BOOKED_SLOTS[selectedDate] ?? []) : []
+  const dynamicSlots = useMemo(() => {
+    if (!selectedDate) return []
+    const [y, m, d] = selectedDate.split('-').map(Number)
+    const day = new Date(y, m - 1, d).getDay()
+    if (day === 0) return buildTimeSlots('11:00', '17:00', 15)
+    return buildTimeSlots('09:30', '19:00', 15)
+  }, [selectedDate])
   if (!selectedDate) return <div className="bg-white rounded-2xl border border-stone-100 p-6 flex items-center justify-center min-h-[200px]"><p className="text-sm text-stone-400">Select a date first</p></div>
   return (
     <div className="bg-white rounded-2xl border border-stone-100 overflow-hidden">
       <div className="px-4 py-3 bg-rose-50 border-b border-rose-100"><p className="text-xs font-medium text-stone-600">Available time - {formatDate(selectedDate)}</p></div>
       <div className="p-3 grid grid-cols-2 gap-2 max-h-[280px] overflow-y-auto">
-        {WORK_HOURS.map((t) => {
+        {dynamicSlots.map((t) => {
           const isBooked = booked.includes(t)
           const isSel = selectedTime === t
           return <button key={t} disabled={isBooked} onClick={() => onSelect(t)} className={`py-2.5 px-3 rounded-xl text-xs font-medium ${isSel ? 'bg-rose-600 text-white' : isBooked ? 'bg-stone-50 text-stone-300' : 'bg-stone-50 text-stone-600 hover:bg-rose-50'}`}>{formatTime(t)}</button>
