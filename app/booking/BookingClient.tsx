@@ -125,6 +125,9 @@ function MiniCalendar({ selectedDate, onSelect }: { selectedDate: string | null;
   const today = new Date()
   const [viewYear, setViewYear] = useState(today.getFullYear())
   const [viewMonth, setViewMonth] = useState(today.getMonth())
+  const minDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const maxDate = new Date(minDate)
+  maxDate.setDate(maxDate.getDate() + 30)
   const firstDow = new Date(viewYear, viewMonth, 1).getDay()
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
 
@@ -141,8 +144,7 @@ function MiniCalendar({ selectedDate, onSelect }: { selectedDate: string | null;
         {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((d) => {
           const iso = toISO(viewYear, viewMonth, d)
           const cell = new Date(viewYear, viewMonth, d); cell.setHours(0, 0, 0, 0)
-          const now = new Date(); now.setHours(0, 0, 0, 0)
-          const disabled = cell < now || cell.getDay() === 0
+          const disabled = cell < minDate || cell > maxDate || cell.getDay() === 0
           const selected = selectedDate === iso
           return <button key={d} disabled={disabled} onClick={() => onSelect(iso)} className={`mx-auto w-8 h-8 rounded-full text-xs ${selected ? 'bg-rose-600 text-white' : disabled ? 'text-stone-300' : 'hover:bg-rose-50 text-stone-700'}`}>{d}</button>
         })}
