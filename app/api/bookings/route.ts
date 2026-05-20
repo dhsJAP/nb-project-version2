@@ -83,6 +83,6 @@ export async function POST(req: NextRequest) {
 
   } catch (err: unknown) {
     console.error("Lỗi API Booking:", (err as Error).message)
-    return NextResponse.json({ error: (err as Error).message }, { status: 400 })
+    return NextResponse.json({ error: (err as Error).message || 'Something went wrong' }, { status: 400 })
   }
 }
