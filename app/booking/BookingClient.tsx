@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import { Service, ServiceItem, StaffMember } from '@/type'
+import { BlockedSlot, Booking, Service, ServiceItem, StaffMember } from '@/type'
 
 type PaymentMode = 'deposit' | 'full'
 
@@ -23,7 +23,6 @@ type BookingFormState = {
   notes: string
 }
 
-const MOCK_BOOKED_SLOTS: Record<string, string[]> = {}
 function toMinutes(hhmm: string) {
   const [h, m] = hhmm.split(':').map(Number)
   return h * 60 + m
@@ -39,6 +38,18 @@ function buildTimeSlots(startHHMM: string, endHHMM: string, stepMinutes = 15) {
   const slots: string[] = []
   for (let t = start; t <= end; t += stepMinutes) slots.push(minutesToHHMM(t))
   return slots
+}
+function parseTimeToMinutes(timeRaw: string | null | undefined) {
+  if (!timeRaw) return null
+  const parts = timeRaw.split(':')
+  if (parts.length < 2) return null
+  const h = Number(parts[0])
+  const m = Number(parts[1])
+  if (Number.isNaN(h) || Number.isNaN(m)) return null
+  return h * 60 + m
+}
+function intervalsOverlap(aStart: number, aEnd: number, bStart: number, bEnd: number) {
+  return aStart < bEnd && bStart < aEnd
 }
 
 function pad(n: number) { return String(n).padStart(2, '0') }
@@ -155,7 +166,7 @@ function MiniCalendar({ selectedDate, onSelect }: { selectedDate: string | null;
         {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((d) => {
           const iso = toISO(viewYear, viewMonth, d)
           const cell = new Date(viewYear, viewMonth, d); cell.setHours(0, 0, 0, 0)
-          const disabled = cell < minDate || cell > maxDate || cell.getDay() === 0
+          const disabled = cell < minDate || cell > maxDate
           const selected = selectedDate === iso
           return <button key={d} disabled={disabled} onClick={() => onSelect(iso)} className={`mx-auto w-8 h-8 rounded-full text-xs ${selected ? 'bg-rose-600 text-white' : disabled ? 'text-stone-300' : 'hover:bg-rose-50 text-stone-700'}`}>{d}</button>
         })}
@@ -164,8 +175,21 @@ function MiniCalendar({ selectedDate, onSelect }: { selectedDate: string | null;
   )
 }
 
-function TimeSlots({ selectedDate, selectedTime, onSelect }: { selectedDate: string | null; selectedTime: string | null; onSelect: (t: string) => void }) {
-  const booked = selectedDate ? (MOCK_BOOKED_SLOTS[selectedDate] ?? []) : []
+function TimeSlots({
+  selectedDate,
+  selectedTime,
+  selectedStaffId,
+  bookings,
+  blockedSlots,
+  onSelect,
+}: {
+  selectedDate: string | null
+  selectedTime: string | null
+  selectedStaffId: string | null
+  bookings: Booking[]
+  blockedSlots: BlockedSlot[]
+  onSelect: (t: string) => void
+}) {
   const dynamicSlots = useMemo(() => {
     if (!selectedDate) return []
     const [y, m, d] = selectedDate.split('-').map(Number)
@@ -173,13 +197,43 @@ function TimeSlots({ selectedDate, selectedTime, onSelect }: { selectedDate: str
     if (day === 0) return buildTimeSlots('11:00', '17:00', 15)
     return buildTimeSlots('09:30', '19:00', 15)
   }, [selectedDate])
+  const blockedByBookings = useMemo(() => {
+    if (!selectedDate || !selectedStaffId) return new Set<string>()
+    const set = new Set<string>()
+    for (const b of bookings) {
+      if (b.staff_id !== selectedStaffId) continue
+      if (b.booking_date !== selectedDate) continue
+      const min = parseTimeToMinutes(b.booking_time)
+      if (min === null) continue
+      set.add(minutesToHHMM(min))
+    }
+    return set
+  }, [bookings, selectedDate, selectedStaffId])
+  const blockedRanges = useMemo(() => {
+    if (!selectedDate) return [] as Array<{ start: number; end: number }>
+    const ranges: Array<{ start: number; end: number }> = []
+    for (const slot of blockedSlots) {
+      if (slot.start_at.split('T')[0] !== selectedDate) continue
+      if (slot.staff_id && selectedStaffId && slot.staff_id !== selectedStaffId) continue
+      if (slot.staff_id && !selectedStaffId) continue
+      const start = parseTimeToMinutes(slot.start_at.split('T')[1])
+      const end = parseTimeToMinutes(slot.end_at.split('T')[1])
+      if (start === null || end === null || end <= start) continue
+      ranges.push({ start, end })
+    }
+    return ranges
+  }, [blockedSlots, selectedDate, selectedStaffId])
   if (!selectedDate) return <div className="bg-white rounded-2xl border border-stone-100 p-6 flex items-center justify-center min-h-[200px]"><p className="text-sm text-stone-400">Select a date first</p></div>
   return (
     <div className="bg-white rounded-2xl border border-stone-100 overflow-hidden">
       <div className="px-4 py-3 bg-rose-50 border-b border-rose-100"><p className="text-xs font-medium text-stone-600">Available time - {formatDate(selectedDate)}</p></div>
       <div className="p-3 grid grid-cols-2 gap-2 max-h-[280px] overflow-y-auto">
         {dynamicSlots.map((t) => {
-          const isBooked = booked.includes(t)
+          const slotStart = toMinutes(t)
+          const slotEnd = slotStart + 15
+          const inBooking = blockedByBookings.has(t)
+          const inBlockedRange = blockedRanges.some((r) => intervalsOverlap(slotStart, slotEnd, r.start, r.end))
+          const isBooked = inBooking || inBlockedRange
           const isSel = selectedTime === t
           return <button key={t} disabled={isBooked} onClick={() => onSelect(t)} className={`py-2.5 px-3 rounded-xl text-xs font-medium ${isSel ? 'bg-rose-600 text-white' : isBooked ? 'bg-stone-50 text-stone-300' : 'bg-stone-50 text-stone-600 hover:bg-rose-50'}`}>{formatTime(t)}</button>
         })}
@@ -188,7 +242,7 @@ function TimeSlots({ selectedDate, selectedTime, onSelect }: { selectedDate: str
   )
 }
 
-export default function BookingClient({ services, serviceItems, staff }: { services: Service[]; serviceItems: ServiceItem[]; staff: StaffMember[] }) {
+export default function BookingClient({ services, serviceItems, staff, bookings, blockedSlots }: { services: Service[]; serviceItems: ServiceItem[]; staff: StaffMember[]; bookings: Booking[]; blockedSlots: BlockedSlot[] }) {
   const searchParams = useSearchParams()
   const initialItemId = searchParams.get('itemId')
   const initialServiceId = searchParams.get('serviceId')
@@ -306,7 +360,7 @@ export default function BookingClient({ services, serviceItems, staff }: { servi
               </div>
             )}
           </div>         
-          <div className="grid sm:grid-cols-2 gap-4 mb-6"><MiniCalendar selectedDate={form.date} onSelect={(iso) => setForm((prev) => ({ ...prev, date: iso, time: null }))} /><TimeSlots selectedDate={form.date} selectedTime={form.time} onSelect={(t) => setForm((prev) => ({ ...prev, time: t }))} /></div>
+          <div className="grid sm:grid-cols-2 gap-4 mb-6"><MiniCalendar selectedDate={form.date} onSelect={(iso) => setForm((prev) => ({ ...prev, date: iso, time: null }))} /><TimeSlots selectedDate={form.date} selectedTime={form.time} selectedStaffId={form.staffId} bookings={bookings} blockedSlots={blockedSlots} onSelect={(t) => setForm((prev) => ({ ...prev, time: t }))} /></div>
           <div className="bg-white rounded-2xl border border-stone-100 p-4 mb-6"><label className="block text-xs text-stone-500 mb-1.5">Notes (optional)</label><textarea rows={3} value={form.notes} onChange={(e) => setForm((prev) => ({ ...prev, notes: e.target.value }))} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm text-black placeholder:font-semibold placeholder:text-black focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-colors" /></div>
           <div className="flex justify-between"><button onClick={() => setStep(2)} className="px-6 py-3 rounded-full text-sm text-stone-400 border border-rose-200 hover:text-rose-500 hover:bg-rose-50 transition-colors">Back</button><button onClick={() => canGoStep4 && setStep(4)} disabled={!canGoStep4} className={`px-8 py-3.5 rounded-full text-sm font-medium ${canGoStep4 ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'bg-stone-100 text-stone-300'}`}>Continue</button></div>
         </div>}
