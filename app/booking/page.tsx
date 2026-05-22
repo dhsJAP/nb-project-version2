@@ -37,7 +37,7 @@ async function getBookings(): Promise<Booking[]> {
 
   const { data, error } = await supabase
     .from('bookings')
-    .select('id, staff_id, booking_date, booking_time, status')
+    .select('id, staff_id, booking_date, booking_time, duration_minutes, status')
     .in('status', ['pending', 'confirmed'])
     .gte('booking_date', todayStr) // Chỉ lấy các lịch hẹn từ ngày hôm nay trở đi
 

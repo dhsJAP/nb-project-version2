@@ -203,9 +203,13 @@ function TimeSlots({
     for (const b of bookings) {
       if (b.staff_id !== selectedStaffId) continue
       if (b.booking_date !== selectedDate) continue
-      const min = parseTimeToMinutes(b.booking_time)
-      if (min === null) continue
-      set.add(minutesToHHMM(min))
+      const start = parseTimeToMinutes(b.booking_time)
+      if (start === null) continue
+      const duration = b.duration_minutes ?? 0
+      const end = start + duration
+      for (let t = start; t < end; t += 15) {
+        set.add(minutesToHHMM(t))
+      }
     }
     return set
   }, [bookings, selectedDate, selectedStaffId])

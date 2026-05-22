@@ -39,6 +39,7 @@ export interface Booking {
   staff_id: string
   booking_date: string // Dạng 'YYYY-MM-DD'
   booking_time: string // Dạng 'HH:MM:SS'
+  duration_minutes?: number | null
   status: 'pending' | 'confirmed' | 'cancelled' // Khớp với Enum booking_status của bố
   payment_mode: string
   stripe_payment_id: string | null
