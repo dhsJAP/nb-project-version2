@@ -266,6 +266,13 @@ function TimeSlots({
           const slotStart = toMinutes(t)
           const slotEnd = slotStart + 15
           
+          if (t === '12:00') {
+    console.log("=== CHECK SLOT 12:00 ===", {
+      'Tên nút đang check': t,
+      'Danh sách các giờ đang bị khóa': Array.from(blockedByBookings),
+      'Có nằm trong danh sách bận không': blockedByBookings.has(t)
+    });
+  }
           // Kiểm tra xem slot này có nằm trong danh sách đen không
           const inBooking = blockedByBookings.has(t)
           const inBlockedRange = blockedRanges.some((r) => intervalsOverlap(slotStart, slotEnd, r.start, r.end))
