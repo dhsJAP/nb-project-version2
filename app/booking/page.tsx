@@ -29,17 +29,22 @@ async function getServiceItems(): Promise<ServiceItem[]> {
 
 // 🟢 SỬA LỖI 1 & 2: Dùng quyền Admin để vượt RLS và giới hạn ngày để tối ưu tốc độ
 async function getBookings(): Promise<Booking[]> {
-  // Bật quyền admin: true để dùng SERVICE_ROLE_KEY đọc được lịch bận
+  // Bật quyền admin: true để dùng SERVICE_ROLE_KEY đọc được lịch bận vượt tường RLS
   const supabase = getSupabase({ admin: true })
   
-  // Lấy chuỗi ngày hôm nay theo định dạng YYYY-MM-DD
-  const todayStr = new Date().toISOString().split('T')[0]
+  // 🟢 ĐOẠN VIẾT LẠI: Lấy ngày hôm nay chuẩn theo múi giờ Chicago của tiệm để chặn ngày quá khứ
+  const todayStr = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Chicago',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).format(new Date())
 
   const { data, error } = await supabase
     .from('bookings')
     .select('id, staff_id, booking_date, booking_time, duration_minutes, status')
     .in('status', ['pending', 'confirmed'])
-    //.gte('booking_date', todayStr) // Chỉ lấy các lịch hẹn từ ngày hôm nay trở đi
+    .gte('booking_date', todayStr) // 🟢 Bộ lọc gte thần thánh đây rồi bố ơi!
 
   if (error) {
     console.error("Lỗi fetch bookings ở Server Component:", error.message)

@@ -197,37 +197,67 @@ function TimeSlots({
     if (day === 0) return buildTimeSlots('11:00', '17:00', 15)
     return buildTimeSlots('09:30', '19:00', 15)
   }, [selectedDate])
+
+  // Lọc danh sách blacklist các slot 15 phút bị chiếm bởi lịch khách đã đặt
   const blockedByBookings = useMemo(() => {
     if (!selectedDate || !selectedStaffId) return new Set<string>()
     const set = new Set<string>()
+    
     for (const b of bookings) {
       if (b.staff_id !== selectedStaffId) continue
       if (b.booking_date !== selectedDate) continue
-      const start = parseTimeToMinutes(b.booking_time)
+      
+      // Cắt bỏ đuôi giây nếu có (ví dụ "11:30:00" -> "11:30") để parse cho chuẩn
+      const cleanTime = b.booking_time.substring(0, 5)
+      const start = parseTimeToMinutes(cleanTime)
       if (start === null) continue
-      const duration = b.duration_minutes ?? 0
+      
+      const duration = b.duration_minutes && b.duration_minutes > 0 ? b.duration_minutes : 30
       const end = start + duration
+      
       for (let t = start; t < end; t += 15) {
         set.add(minutesToHHMM(t))
       }
     }
     return set
   }, [bookings, selectedDate, selectedStaffId])
+
+  // Lọc danh sách các khoảng thời gian thợ nghỉ (blocked_slots)
   const blockedRanges = useMemo(() => {
-    if (!selectedDate) return [] as Array<{ start: number; end: number }>
+    if (!selectedDate) return []
     const ranges: Array<{ start: number; end: number }> = []
+    
     for (const slot of blockedSlots) {
-      if (slot.start_at.split('T')[0] !== selectedDate) continue
+      // Nếu là lịch block riêng của thợ khác thì bỏ qua
       if (slot.staff_id && selectedStaffId && slot.staff_id !== selectedStaffId) continue
-      if (slot.staff_id && !selectedStaffId) continue
-      const start = parseTimeToMinutes(slot.start_at.split('T')[1])
-      const end = parseTimeToMinutes(slot.end_at.split('T')[1])
+      
+      // Chuyển đổi start_at và end_at (UTC) sang ngày giờ địa phương Mỹ để so sánh
+      const startLocal = new Date(slot.start_at)
+      const endLocal = new Date(slot.end_at)
+      
+      // Định dạng ngày cục bộ theo múi giờ tiệm để so sánh với selectedDate (YYYY-MM-DD)
+      const slotDateStr = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'America/Chicago',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).format(startLocal)
+      
+      if (slotDateStr !== selectedDate) continue
+
+  
+      
+      const start = parseTimeToMinutes(`${pad(startLocal.getHours())}:${pad(startLocal.getMinutes())}`)
+      const end = parseTimeToMinutes(`${pad(endLocal.getHours())}:${pad(endLocal.getMinutes())}`)
+      
       if (start === null || end === null || end <= start) continue
       ranges.push({ start, end })
     }
     return ranges
   }, [blockedSlots, selectedDate, selectedStaffId])
+
   if (!selectedDate) return <div className="bg-white rounded-2xl border border-stone-100 p-6 flex items-center justify-center min-h-[200px]"><p className="text-sm text-stone-400">Select a date first</p></div>
+
   return (
     <div className="bg-white rounded-2xl border border-stone-100 overflow-hidden">
       <div className="px-4 py-3 bg-rose-50 border-b border-rose-100"><p className="text-xs font-medium text-stone-600">Available time - {formatDate(selectedDate)}</p></div>
@@ -235,11 +265,24 @@ function TimeSlots({
         {dynamicSlots.map((t) => {
           const slotStart = toMinutes(t)
           const slotEnd = slotStart + 15
+          
+          // Kiểm tra xem slot này có nằm trong danh sách đen không
           const inBooking = blockedByBookings.has(t)
           const inBlockedRange = blockedRanges.some((r) => intervalsOverlap(slotStart, slotEnd, r.start, r.end))
+          
           const isBooked = inBooking || inBlockedRange
           const isSel = selectedTime === t
-          return <button key={t} disabled={isBooked} onClick={() => onSelect(t)} className={`py-2.5 px-3 rounded-xl text-xs font-medium ${isSel ? 'bg-rose-600 text-white' : isBooked ? 'bg-stone-50 text-stone-300' : 'bg-stone-50 text-stone-600 hover:bg-rose-50'}`}>{formatTime(t)}</button>
+          
+          return (
+            <button 
+              key={t} 
+              disabled={isBooked} 
+              onClick={() => onSelect(t)} 
+              className={`py-2.5 px-3 rounded-xl text-xs font-medium ${isSel ? 'bg-rose-600 text-white' : isBooked ? 'bg-stone-50 text-stone-300 line-through' : 'bg-stone-50 text-stone-600 hover:bg-rose-50'}`}
+            >
+              {formatTime(t)}
+            </button>
+          )
         })}
       </div>
     </div>
