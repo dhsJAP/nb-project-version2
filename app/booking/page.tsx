@@ -5,6 +5,25 @@ import BookingClient from './BookingClient'
 import { Suspense } from 'react'
 import { getStaffMembers } from '@/lib/staff'
 
+function getChicagoDateISO(date = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Chicago',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(date)
+
+  const year = parts.find((p) => p.type === 'year')?.value
+  const month = parts.find((p) => p.type === 'month')?.value
+  const day = parts.find((p) => p.type === 'day')?.value
+
+  if (!year || !month || !day) {
+    throw new Error('Failed to format Chicago date')
+  }
+
+  return `${year}-${month}-${day}`
+}
+
 // Hàm lấy danh sách dịch vụ (Dùng ANON_KEY công khai)
 async function getServices(): Promise<Service[]> {
   const supabase = getSupabase()
@@ -45,12 +64,7 @@ async function getBookings(): Promise<Booking[]> {
   })
   
   // Lấy ngày hôm nay theo giờ Mỹ để so sánh
-  const todayStr = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'America/Chicago',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).format(new Date())
+  const todayStr = getChicagoDateISO()
 
   // 3. Tiến hành lấy lịch bận
   const { data, error } = await supabaseAdmin
