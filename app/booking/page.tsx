@@ -12,7 +12,7 @@ interface RawBookingFromDB {
   booking_date: string
   booking_time: string
   status: string
-  service_item_ids?: string[] | null
+  service_id?: string | null // Khớp chuẩn cột service_id (uuid) trong ảnh của bố
 }
 
 // Hàm lấy danh sách dịch vụ (Dùng ANON_KEY công khai)
@@ -38,7 +38,6 @@ async function getServiceItems(): Promise<ServiceItem[]> {
   return data ?? []
 }
 
-// Hàm lấy lịch đã hẹn và tự động tính toán thời lượng động dựa trên service_items
 async function getBookings(): Promise<Booking[]> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -48,12 +47,10 @@ async function getBookings(): Promise<Booking[]> {
     return []
   }
 
-  // Tạo client Admin xịn để đi xuyên qua bức tường RLS bảo mật
   const supabaseAdmin = createClient(url, serviceRoleKey, {
     auth: { persistSession: false }
   })
   
-  // Lấy ngày hôm nay chuẩn theo múi giờ Chicago của tiệm để lọc lịch quá khứ
   const todayStr = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'America/Chicago',
     year: 'numeric',
@@ -61,15 +58,15 @@ async function getBookings(): Promise<Booking[]> {
     day: '2-digit'
   }).format(new Date())
 
-  // Chạy song song: Vừa lấy lịch đặt, vừa lấy từ điển thời gian của service_items
-  const [bookingsRes, itemsRes] = await Promise.all([
+  // Gọi song song bảng bookings (lấy service_id) và bảng dịch vụ services để lấy duration_minutes chuẩn
+  const [bookingsRes, servicesRes] = await Promise.all([
     supabaseAdmin
       .from('bookings')
-      .select('id, staff_id, booking_date, booking_time, status, service_item_ids')
+      .select('id, staff_id, booking_date, booking_time, status, service_id') // Quét đúng các cột trong ảnh của bố
       .in('status', ['pending', 'confirmed'])
       .gte('booking_date', todayStr),
     supabaseAdmin
-      .from('service_items')
+      .from('services')
       .select('id, duration_minutes')
   ])
 
@@ -79,26 +76,18 @@ async function getBookings(): Promise<Booking[]> {
   }
 
   const rawBookings = (bookingsRes.data ?? []) as RawBookingFromDB[]
-  const serviceItems = itemsRes.data ?? []
+  const servicesData = servicesRes.data ?? []
 
-  // Tạo một bản đồ (Map) để tra cứu nhanh thời gian của từng ID dịch vụ
+  // Tạo bản đồ tra cứu thời gian dựa trên từng service_id
   const durationMap = new Map<string, number>()
-  serviceItems.forEach(item => {
-    durationMap.set(item.id, item.duration_minutes ?? 0)
+  servicesData.forEach(s => {
+    durationMap.set(s.id, s.duration_minutes ?? 0)
   })
 
-  // Thuật toán: Duyệt qua từng lịch đặt, ép kiểu dữ liệu chuẩn và tự động cộng dồn thời gian
+  // Thuật toán Ma Thuật: Tự động ánh xạ thời gian chuẩn từ bảng services sang từng lịch đặt
   const formattedBookings = rawBookings.map((b) => {
-    let calculatedDuration = 0
-
-    if (Array.isArray(b.service_item_ids)) {
-      b.service_item_ids.forEach((itemId: string) => {
-        calculatedDuration += durationMap.get(itemId) || 0
-      })
-    }
-
-    // Nếu dữ liệu cũ không có duration hoặc bằng 0, cho fallback nhẹ về 30 phút để bảo vệ Frontend
-    if (calculatedDuration === 0) calculatedDuration = 30
+    // Tìm thời lượng chuẩn của nhóm dịch vụ đó, nếu không thấy tự động bọc lót về 30 phút
+    const calculatedDuration = b.service_id ? (durationMap.get(b.service_id) || 30) : 30
 
     return {
       id: b.id,
@@ -106,7 +95,7 @@ async function getBookings(): Promise<Booking[]> {
       booking_date: b.booking_date,
       booking_time: b.booking_time,
       status: b.status,
-      duration_minutes: calculatedDuration // Gửi thời lượng tính toán động sang cho BookingClient xử lý
+      duration_minutes: calculatedDuration // Bơm thời lượng chuẩn động sang cho Frontend khóa nút
     }
   })
 
