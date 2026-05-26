@@ -58,15 +58,15 @@ async function getBookings(): Promise<Booking[]> {
     day: '2-digit'
   }).format(new Date())
 
-  // Gọi song song bảng bookings (lấy service_id) và bảng dịch vụ services để lấy duration_minutes chuẩn
-  const [bookingsRes, servicesRes] = await Promise.all([
+  // 🟢 THAY ĐỔI CHIẾN THUẬT: Gọi bảng bookings kết hợp bảng CHI TIẾT service_items
+  const [bookingsRes, itemsRes] = await Promise.all([
     supabaseAdmin
       .from('bookings')
-      .select('id, staff_id, booking_date, booking_time, status, service_id') // Quét đúng các cột trong ảnh của bố
+      .select('id, staff_id, booking_date, booking_time, status, service_id')
       .in('status', ['pending', 'confirmed'])
       .gte('booking_date', todayStr),
     supabaseAdmin
-      .from('services')
+      .from('service_items') // 🎯 Nhắm thẳng vào bảng dịch vụ con chứa duration chuẩn!
       .select('id, duration_minutes')
   ])
 
@@ -76,17 +76,17 @@ async function getBookings(): Promise<Booking[]> {
   }
 
   const rawBookings = (bookingsRes.data ?? []) as RawBookingFromDB[]
-  const servicesData = servicesRes.data ?? []
+  const serviceItemsData = itemsRes.data ?? []
 
-  // Tạo bản đồ tra cứu thời gian dựa trên từng service_id
+  // Tạo bản đồ tra cứu thời gian dựa trên ID của service_items
   const durationMap = new Map<string, number>()
-  servicesData.forEach(s => {
-    durationMap.set(s.id, s.duration_minutes ?? 0)
+  serviceItemsData.forEach(item => {
+    durationMap.set(item.id, item.duration_minutes ?? 0)
   })
 
-  // Thuật toán Ma Thuật: Tự động ánh xạ thời gian chuẩn từ bảng services sang từng lịch đặt
+  // Thuật toán: Ánh xạ thời gian từ bảng dịch vụ con sang cho từng lịch đặt
   const formattedBookings = rawBookings.map((b) => {
-    // Tìm thời lượng chuẩn của nhóm dịch vụ đó, nếu không thấy tự động bọc lót về 30 phút
+    // Tìm thời lượng chuẩn trong bảng service_items, nếu không có mới chịu lùi về 30 phút
     const calculatedDuration = b.service_id ? (durationMap.get(b.service_id) || 30) : 30
 
     return {
@@ -95,7 +95,7 @@ async function getBookings(): Promise<Booking[]> {
       booking_date: b.booking_date,
       booking_time: b.booking_time,
       status: b.status,
-      duration_minutes: calculatedDuration // Bơm thời lượng chuẩn động sang cho Frontend khóa nút
+      duration_minutes: calculatedDuration // Bơm số phút xịn từ service_items sang Frontend
     }
   })
 
