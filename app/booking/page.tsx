@@ -28,24 +28,23 @@ async function getServiceItems(): Promise<ServiceItem[]> {
   return data ?? []
 }
 
-// 🟢 TỰ TẠO ADMIN CLIENT VƯỢT QUA BỨC TƯỜNG RLS 100%
-function getSupabaseAdmin() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY // Chìa khóa Admin nằm ẩn an toàn ở môi trường Server
-
-  if (!url || !serviceRoleKey) {
-    console.error("❌ Thiếu biến môi trường SUPABASE_URL hoặc SUPABASE_SERVICE_ROLE_KEY trong file .env!")
-  }
-  return createClient(url || '', serviceRoleKey || '', {
-    auth: { persistSession: false }
-  })
-}
-
 // Hàm lấy lịch đã hẹn
 async function getBookings(): Promise<Booking[]> {
-  // Dùng quyền Admin tối cao để lấy dữ liệu bận
-  const supabaseAdmin = getSupabaseAdmin()
+  // 1. Lấy biến môi trường trực tiếp bên trong hàm để không bị rỗng khi load trang
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !serviceRoleKey) {
+    console.error("❌ LỖI HỆ THỐNG: Không tìm thấy SERVICE_ROLE_KEY trong file .env!");
+    return []
+  }
+
+  // 2. Tạo Admin Client xịn đi xuyên RLS
+  const supabaseAdmin = createClient(url, serviceRoleKey, {
+    auth: { persistSession: false }
+  })
   
+  // Lấy ngày hôm nay theo giờ Mỹ để so sánh
   const todayStr = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'America/Chicago',
     year: 'numeric',
@@ -53,31 +52,38 @@ async function getBookings(): Promise<Booking[]> {
     day: '2-digit'
   }).format(new Date())
 
+  // 3. Tiến hành lấy lịch bận
   const { data, error } = await supabaseAdmin
     .from('bookings')
     .select('id, staff_id, booking_date, booking_time, duration_minutes, status')
     .in('status', ['pending', 'confirmed'])
-    .gte('booking_date', todayStr) // Lọc từ ngày hôm nay trở đi để tối ưu tốc độ
+    .gte('booking_date', todayStr) // Chỉ lấy từ hôm nay trở đi cho nhẹ mượt
 
   if (error) {
-    console.error("❌ Lỗi fetch bookings trực tiếp bằng Admin Key:", error.message)
+    console.error("❌ Lỗi truy vấn bảng bookings:", error.message)
     return []
   }
   
-  console.log("✈️ SERVER ADMIN ĐÃ LẤY ĐƯỢC SỐ LƯỢNG BOOKINGS LÀ:", data?.length ?? 0)
   return (data ?? []) as Booking[]
 }
 
 // Hàm lấy lịch thợ nghỉ
 async function getBlockedSlots(): Promise<BlockedSlot[]> {
-  const supabaseAdmin = getSupabaseAdmin()
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !serviceRoleKey) return []
+
+  const supabaseAdmin = createClient(url, serviceRoleKey, {
+    auth: { persistSession: false }
+  })
   
   const { data, error } = await supabaseAdmin
     .from('blocked_slots')
     .select('id, staff_id, start_at, end_at, reason')
 
   if (error) {
-    console.error("❌ Lỗi fetch blocked_slots bằng Admin Key:", error.message)
+    console.error("❌ Lỗi truy vấn bảng blocked_slots:", error.message)
     return []
   }
   return (data ?? []) as BlockedSlot[]
