@@ -67,11 +67,18 @@ async function getBookings(): Promise<Booking[]> {
   const todayStr = getChicagoDateISO()
 
   // 3. Tiến hành lấy lịch bận
-  const { data, error } = await supabaseAdmin
+  const { data, error, count } = await supabaseAdmin
     .from('bookings')
     .select('id, staff_id, booking_date, booking_time, duration_minutes, status')
     .in('status', ['pending', 'confirmed'])
     .gte('booking_date', todayStr) // Chỉ lấy từ hôm nay trở đi cho nhẹ mượt
+
+  console.log('[getBookings] query debug', {
+    todayStr,
+    count,
+    error: error ? { message: error.message, details: error.details, hint: error.hint, code: error.code } : null,
+    sample: data?.slice(0, 3) ?? []
+  })
 
   if (error) {
     console.error("❌ Lỗi truy vấn bảng bookings:", error.message)
