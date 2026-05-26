@@ -200,6 +200,13 @@ function TimeSlots({
 
   // Lọc danh sách blacklist các slot 15 phút bị chiếm bởi lịch khách đã đặt
   const blockedByBookings = useMemo(() => {
+  // 🟢 ĐOẠN CONSOLE 1: Check xem ban đầu bookings truyền xuống có bị rỗng không, staffId là gì
+    console.log("🔍 ĐOẠN 1 - KIỂM TRA ĐẦU VÀO:", {
+      selectedDate,
+      selectedStaffId,
+      'Tổng số lịch nhận từ Server': bookings?.length
+    });
+  
     if (!selectedDate) return new Set<string>()
     const set = new Set<string>()
     
@@ -272,6 +279,17 @@ function TimeSlots({
           
           const isBooked = inBooking || inBlockedRange
           const isSel = selectedTime === t
+
+          // 🟢 ĐOẠN CONSOLE 2: Bắt quả tang riêng nút 12:00 trưa xem tại sao trạng thái isBooked lại ra false
+          if (t === '12:00') {
+            console.log("🎯 ĐOẠN 2 - BẮT QUẢ TANG SLOT 12:00:", {
+              'Tên nút': t,
+              'Có bị trùng lịch đặt không (inBooking)': inBooking,
+              'Có bị trùng lịch nghỉ không (inBlockedRange)': inBlockedRange,
+              'Danh sách Đen các giờ đã khóa': Array.from(blockedByBookings),
+              'Trạng thái Khóa nút cuối cùng (isBooked)': isBooked
+            });
+          }
           
           return (
             <button 
