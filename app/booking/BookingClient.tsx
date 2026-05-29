@@ -8,6 +8,20 @@ import { BlockedSlot, Booking, Service, ServiceItem, StaffMember } from '@/type'
 
 type PaymentMode = 'deposit' | 'full'
 
+type BookingApiPayload = {
+  serviceId: string
+  serviceItemIds: string[]
+  staffId: string
+  date: string
+  time: string
+  customerName: string
+  customerEmail: string
+  customerPhone: string
+  paymentMode: PaymentMode
+  price: number
+  notes: string
+}
+
 type BookingFormState = {
   date: string | null
   time: string | null
@@ -339,7 +353,22 @@ export default function BookingClient({ services, serviceItems, staff, bookings,
     setLoading(true); setError('')
     try {
       const primaryItem = selectedItems[0]
-      const res = await fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ serviceId: primaryItem?.id, serviceItemIds: selectedItemIds, staffId: form.staffId, date: form.date, time: form.time, customerName: form.name, customerEmail: form.email, customerPhone: form.phone, paymentMode: form.paymentMode, price: totalPrice, notes: form.notes }) })
+      if (!primaryItem) throw new Error('Missing primary service item')
+      if (!form.staffId || !form.date || !form.time) throw new Error('Missing booking details')
+      const payload: BookingApiPayload = {
+        serviceId: primaryItem.id,
+        serviceItemIds: selectedItemIds,
+        staffId: form.staffId,
+        date: form.date,
+        time: form.time,
+        customerName: form.name,
+        customerEmail: form.email,
+        customerPhone: form.phone,
+        paymentMode: form.paymentMode,
+        price: totalPrice,
+        notes: form.notes,
+      }
+      const res = await fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
       if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || 'Something went wrong') }
       setStep(5)
     } catch (e) {

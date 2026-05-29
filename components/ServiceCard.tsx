@@ -16,6 +16,15 @@ export function ServiceCard({
   onToggleDetails: () => void
 }) {
   const [openUpward, setOpenUpward] = useState(false)
+  const durationValues = items
+    .map((item) => item.duration_minutes)
+    .filter((duration): duration is number => typeof duration === "number" && duration > 0)
+  const durationLabel =
+    durationValues.length === 0
+      ? "Duration varies"
+      : durationValues.length === 1
+        ? `${durationValues[0]} minutes`
+        : `From ${Math.min(...durationValues)} minutes`
 
   const updatePanelDirection = useCallback((el: HTMLDivElement | null) => {
     if (!el) return
@@ -61,7 +70,7 @@ export function ServiceCard({
       </p>
       <div className="flex items-center justify-between">
         <span className="text-xs text-stone-400 tracking-wide">
-          {service.duration_minutes} minutes
+          {durationLabel}
         </span>
         <span
           className="text-2xl text-rose-600"

@@ -2,7 +2,6 @@ export interface Service {
   id: string
   name: string
   description: string
-  duration_minutes: number
   price: number
 }
 
@@ -35,7 +34,7 @@ export interface Booking {
   id: string
   customer_name: string
   customer_email: string
-  service_id: string
+  service_id: string // Stores the booked service_item.id
   staff_id: string
   booking_date: string // Dạng 'YYYY-MM-DD'
   booking_time: string // Dạng 'HH:MM:SS'
