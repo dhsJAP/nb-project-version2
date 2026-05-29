@@ -101,7 +101,6 @@ function ServiceGroupCard({ service, selectedCount, onOpen }: { service: Service
         {selectedCount > 0 && <span className="text-xs px-2 py-1 rounded-full bg-rose-100 text-rose-700">{selectedCount} selected</span>}
       </div>
       <div className="flex items-center justify-between">
-        <span className="text-xs text-stone-400">{service.duration_minutes} min</span>
         <span className="text-xs text-rose-500 uppercase tracking-wide">Click for details</span>
       </div>
     </button>
@@ -131,7 +130,7 @@ function ServicesModal({ service, items, selectedItemIds, onToggleItem, onClose 
                   </div>
                   <div className="text-right">
                     {item.price !== null && <p className="text-sm text-rose-600 font-medium">${item.price}</p>}
-                    {item.duration_minutes !== null && <p className="text-[11px] text-stone-400">{item.duration_minutes}m</p>}
+                    {item.duration_minutes !== null && <p className="text-[11px] text-stone-400">{item.duration_minutes}mins</p>}
                   </div>
                 </div>
               </button>
@@ -340,7 +339,7 @@ export default function BookingClient({ services, serviceItems, staff, bookings,
     setLoading(true); setError('')
     try {
       const primaryItem = selectedItems[0]
-      const res = await fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ serviceId: primaryItem?.service_id, serviceItemIds: selectedItemIds, staffId: form.staffId, date: form.date, time: form.time, customerName: form.name, customerEmail: form.email, customerPhone: form.phone, paymentMode: form.paymentMode, price: totalPrice, notes: form.notes }) })
+      const res = await fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ serviceId: primaryItem?.id, serviceItemIds: selectedItemIds, staffId: form.staffId, date: form.date, time: form.time, customerName: form.name, customerEmail: form.email, customerPhone: form.phone, paymentMode: form.paymentMode, price: totalPrice, notes: form.notes }) })
       if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || 'Something went wrong') }
       setStep(5)
     } catch (e) {

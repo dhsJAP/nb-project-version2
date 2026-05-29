@@ -20,10 +20,14 @@ async function getServices(): Promise<Service[]> {
   const supabase = getSupabase()
   const { data, error } = await supabase
     .from('services')
-    .select('*')
-    .order('price', { ascending: true })
-  if (error) return []
-  return data ?? []
+    .select('id, name')
+    .order('name', { ascending: true })
+
+  if (error) {
+    console.error("❌ Lỗi fetch services từ Database:", error.message)
+    return []
+  }
+  return (data ?? []) as unknown as Service[]
 }
 
 // Hàm lấy danh sách chi tiết dịch vụ
