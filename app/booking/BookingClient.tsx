@@ -339,7 +339,22 @@ export default function BookingClient({ services, serviceItems, staff, bookings,
     setLoading(true); setError('')
     try {
       const primaryItem = selectedItems[0]
-      const res = await fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ serviceId: primaryItem?.id, serviceItemIds: selectedItemIds, staffId: form.staffId, date: form.date, time: form.time, customerName: form.name, customerEmail: form.email, customerPhone: form.phone, paymentMode: form.paymentMode, price: totalPrice, notes: form.notes }) })
+      const res = await fetch('/api/bookings', {
+         method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ serviceId: primaryItem?.id,
+             serviceItemIds: selectedItemIds,
+              staffId: form.staffId,
+              date: form.date,
+               time: form.time,
+                customerName: form.name,
+                 customerEmail: form.email,
+                  customerPhone: form.phone,
+                   paymentMode: form.paymentMode,
+                    price: totalPrice,
+                     notes: form.notes 
+          }) 
+      })
       if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || 'Something went wrong') }
       setStep(5)
     } catch (e) {
