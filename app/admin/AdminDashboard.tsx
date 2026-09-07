@@ -178,9 +178,15 @@ export default function AdminDashboard() {
 
   async function updateStatus(id: string, status: BookingStatus) {
     try {
+      const supabase = getSupabase()
+      const { data: { session } } = await supabase.auth.getSession()
+
       const response = await fetch('/api/admin/bookings', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
         body: JSON.stringify({ id, status }),
       })
 
@@ -201,9 +207,15 @@ export default function AdminDashboard() {
 
   async function reschedule(id: string, date: string, time: string) {
     try {
+      const supabase = getSupabase()
+      const { data: { session } } = await supabase.auth.getSession()
+
       const response = await fetch('/api/admin/bookings', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
         body: JSON.stringify({ id, date, time }),
       })
 

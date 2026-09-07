@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { ADMIN_EMAIL } from '@/lib/supabase'
 
 export async function PATCH(req: NextRequest) {
   try {
+    const authorization = req.headers.get('authorization') || req.headers.get('Authorization')
+    const authToken = authorization?.startsWith('Bearer ') ? authorization.slice(7) : null
+
+    if (!authToken) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const body = await req.json()
     const { id, status, date, time } = body as {
       id?: string
@@ -16,13 +24,34 @@ export async function PATCH(req: NextRequest) {
     }
 
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    if (!url || !anonKey) {
+      return NextResponse.json({ error: 'Supabase credentials are not configured' }, { status: 500 })
+    }
+
+    const supabase = createClient(url, anonKey, {
+      auth: { persistSession: false },
+    })
+
+    const { data: userData, error: authError } = await supabase.auth.getUser(authToken)
+
+    if (authError || !userData.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const userEmail = userData.user.email?.toLowerCase() || ''
+    if (!ADMIN_EMAIL || userEmail !== ADMIN_EMAIL) {
+      return NextResponse.json({ error: 'Forbidden: admin access required' }, { status: 403 })
+    }
+
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-    if (!url || !serviceRoleKey) {
+    if (!serviceRoleKey) {
       return NextResponse.json({ error: 'Supabase admin credentials are not configured' }, { status: 500 })
     }
 
-    const supabase = createClient(url, serviceRoleKey, {
+    const adminSupabase = createClient(url, serviceRoleKey, {
       auth: { persistSession: false },
     })
 
@@ -35,7 +64,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: 'No update fields provided' }, { status: 400 })
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await adminSupabase
       .from('bookings')
       .update(updatePayload)
       .eq('id', id)

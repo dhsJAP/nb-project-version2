@@ -4,6 +4,8 @@ type SupabaseClientOptions = {
   admin?: boolean
 }
 
+export const ADMIN_EMAIL = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || process.env.ADMIN_EMAIL || '').toLowerCase()
+
 export function getSupabase(options: SupabaseClientOptions = {}) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = options.admin
@@ -23,4 +25,9 @@ export function getSupabase(options: SupabaseClientOptions = {}) {
   }
 
   return createClient(url, key)
+}
+
+export function isAdminUser(user: { email?: string | null } | null | undefined) {
+  if (!user?.email) return false
+  return user.email.toLowerCase() === ADMIN_EMAIL
 }
