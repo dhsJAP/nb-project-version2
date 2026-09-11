@@ -35,6 +35,16 @@ type RawBookingRecord = {
   status: string | null
   payment_mode: string | null
   notes: string | null
+  services?: {
+    id?: string | null
+    name?: string | null
+    price?: number | null
+    duration_minutes?: number | null
+  } | null
+  staff?: {
+    id?: string | null
+    name?: string | null
+  } | null
 }
 
 const today = new Date()
@@ -97,31 +107,34 @@ export default function AdminDashboard() {
         const supabase = getSupabase()
         const { data: bookingsData, error: bookingsError } = await supabase
           .from('bookings')
-          .select('id, customer_name, customer_email, service_id, staff_id, booking_date, booking_time, status, payment_mode, notes')
+          .select(`
+            id,
+            customer_name,
+            customer_email,
+            service_id,
+            staff_id,
+            booking_date,
+            booking_time,
+            status,
+            payment_mode,
+            notes,
+            services:service_id (
+              id,
+              name,
+              price,
+              duration_minutes
+            ),
+            staff:staff_id (
+              id,
+              name
+            )
+          `)
           .order('booking_date', { ascending: true })
           .order('booking_time', { ascending: true })
 
         if (bookingsError) throw new Error(bookingsError.message)
 
-        const { data: servicesData, error: servicesError } = await supabase
-          .from('services')
-          .select('id, name, price, duration_minutes')
-
-        if (servicesError) throw new Error(servicesError.message)
-
-        const { data: staffData, error: staffError } = await supabase
-          .from('staff')
-          .select('id, name')
-
-        if (staffError) throw new Error(staffError.message)
-
-        const serviceById = Object.fromEntries((servicesData ?? []).map((service) => [service.id, service]))
-        const staffById = Object.fromEntries((staffData ?? []).map((member) => [member.id, member]))
-
         const mappedBookings: Booking[] = ((bookingsData ?? []) as RawBookingRecord[]).map((item) => {
-          const service = serviceById[item.service_id ?? ''] as { name?: string; price?: number; duration_minutes?: number } | undefined
-          const staff = staffById[item.staff_id ?? ''] as { name?: string } | undefined
-
           const normalizedStatus: BookingStatus =
             item.status === 'confirmed' || item.status === 'pending' || item.status === 'completed' || item.status === 'cancelled'
               ? item.status
@@ -129,6 +142,8 @@ export default function AdminDashboard() {
 
           const payment = item.payment_mode === 'full' ? 'Paid' : item.payment_mode === 'deposit' ? 'Deposit' : 'Due'
           const bookingDate = item.booking_date ?? iso(0)
+          const service = item.services ?? null
+          const staff = item.staff ?? null
 
           return {
             id: item.id,
@@ -173,6 +188,20 @@ export default function AdminDashboard() {
     const matchesQuery = `${booking.customer} ${booking.id} ${booking.service}`.toLowerCase().includes(query.toLowerCase())
     return matchesQuery && (statusFilter === 'all' || booking.status === statusFilter) && (stylistFilter === 'all' || booking.stylistId === stylistFilter)
   }), [bookings, query, statusFilter, stylistFilter])
+
+  const overviewStats = useMemo(() => {
+    const todayBookings = bookings.filter((booking) => booking.date === iso(0))
+    const pendingRequests = bookings.filter((booking) => booking.status === 'pending').length
+    const totalRevenue = todayBookings.reduce((sum, booking) => sum + booking.price, 0)
+    const activeStylists = new Set(todayBookings.map((booking) => booking.stylistId).filter(Boolean)).size
+
+    return {
+      todayBookings: todayBookings.length,
+      pendingRequests,
+      totalRevenue,
+      activeStylists,
+    }
+  }, [bookings])
 
   const selectedBooking = bookings.find((booking) => booking.id === rescheduleId)
 
@@ -250,7 +279,7 @@ export default function AdminDashboard() {
       <div className="admin-content">
         <div className="page-heading"><div><p className="eyebrow">Tuesday, July 21, 2026</p><h1>{activeTab === 'calendar' ? 'Stylist calendar' : activeTab === 'bookings' ? 'All bookings' : 'Good morning, Trinh'}</h1><p className="heading-copy">{activeTab === 'overview' ? 'Here&apos;s what is happening at your salon today.' : activeTab === 'bookings' ? 'Manage appointments and keep your team on schedule.' : 'See each stylist&apos;s appointments at a glance.'}</p></div><button className="primary-button" onClick={() => setActiveTab('bookings')}><span>+</span> New booking</button></div>
 
-        {activeTab === 'overview' && <><div className="stats-grid"><StatCard label="Today&apos;s bookings" value="12" detail="↑ 8.2% from last Tuesday" tone="pink" icon="calendar" /><StatCard label="Pending requests" value="4" detail="Needs your attention" tone="peach" icon="clock" /><StatCard label="Total revenue" value="$846" detail="↑ 12.4% from last week" tone="lavender" icon="grid" /><StatCard label="Active stylists" value="3 / 3" detail="Everyone is available" tone="mint" icon="users" /></div><section className="dashboard-grid"><div className="panel upcoming-panel"><div className="panel-heading"><div><h2>Upcoming appointments</h2><p>Today, {formatDate(iso(0))}</p></div><button className="text-button" onClick={() => setActiveTab('bookings')}>View all <Icon name="arrow" size={15} /></button></div>{loading ? <div className="empty-state">Loading bookings…</div> : <div className="appointment-list">{bookings.filter((b) => b.date === iso(0)).map((booking) => <AppointmentRow key={booking.id} booking={booking} onReschedule={setRescheduleId} />)}</div>}</div><div className="panel mini-calendar-panel"><div className="panel-heading"><div><h2>July 2026</h2><p>Monthly overview</p></div><button className="round-button">•••</button></div><MiniMonth selectedDate={selectedDate} bookings={bookings} onSelect={setSelectedDate} /><div className="calendar-legend"><span><i className="legend-pink" />Booked</span><span><i className="legend-dot" />Today</span></div></div></section><section className="panel stylist-panel"><div className="panel-heading"><div><h2>Your stylists</h2><p>Today&apos;s workload</p></div><button className="text-button" onClick={() => setActiveTab('calendar')}>Open calendar <Icon name="arrow" size={15} /></button></div><div className="stylist-grid">{STAFF_MEMBERS.map((staff) => <StylistCard key={staff.id} staff={staff} bookings={bookings.filter((b) => b.stylistId === staff.id && b.date === iso(0))} />)}</div></section></>}
+        {activeTab === 'overview' && <><div className="stats-grid"><StatCard label="Today&apos;s bookings" value={String(overviewStats.todayBookings)} detail={`${overviewStats.todayBookings === 1 ? '1 appointment' : `${overviewStats.todayBookings} appointments`} today`} tone="pink" icon="calendar" /><StatCard label="Pending requests" value={String(overviewStats.pendingRequests)} detail={overviewStats.pendingRequests === 0 ? 'No pending items' : 'Needs your attention'} tone="peach" icon="clock" /><StatCard label="Total revenue" value={`$${overviewStats.totalRevenue}`} detail="From today&apos;s bookings" tone="lavender" icon="grid" /><StatCard label="Active stylists" value={`${overviewStats.activeStylists} / ${STAFF_MEMBERS.length}`} detail={overviewStats.activeStylists === 0 ? 'No staff assigned yet' : 'Assigned today'} tone="mint" icon="users" /></div><section className="dashboard-grid"><div className="panel upcoming-panel"><div className="panel-heading"><div><h2>Upcoming appointments</h2><p>Today, {formatDate(iso(0))}</p></div><button className="text-button" onClick={() => setActiveTab('bookings')}>View all <Icon name="arrow" size={15} /></button></div>{loading ? <div className="empty-state">Loading bookings…</div> : <div className="appointment-list">{bookings.filter((b) => b.date === iso(0)).map((booking) => <AppointmentRow key={booking.id} booking={booking} onReschedule={setRescheduleId} />)}</div>}</div><div className="panel mini-calendar-panel"><div className="panel-heading"><div><h2>July 2026</h2><p>Monthly overview</p></div><button className="round-button">•••</button></div><MiniMonth selectedDate={selectedDate} bookings={bookings} onSelect={setSelectedDate} /><div className="calendar-legend"><span><i className="legend-pink" />Booked</span><span><i className="legend-dot" />Today</span></div></div></section><section className="panel stylist-panel"><div className="panel-heading"><div><h2>Your stylists</h2><p>Today&apos;s workload</p></div><button className="text-button" onClick={() => setActiveTab('calendar')}>Open calendar <Icon name="arrow" size={15} /></button></div><div className="stylist-grid">{STAFF_MEMBERS.map((staff) => <StylistCard key={staff.id} staff={staff} bookings={bookings.filter((b) => b.stylistId === staff.id && b.date === iso(0))} />)}</div></section></>}
 
         {(activeTab === 'bookings' || activeTab === 'calendar') && <section className="panel bookings-panel"><div className="panel-heading booking-heading"><div><h2>{activeTab === 'calendar' ? 'Schedule by stylist' : 'Booking requests'}</h2><p>{activeTab === 'calendar' ? 'Select a day to see the team schedule.' : `${filteredBookings.length} appointments in your workspace`}</p></div><div className="view-toggle"><button className={activeTab === 'bookings' ? 'selected' : ''} onClick={() => setActiveTab('bookings')}><Icon name="calendar" size={15} /> List</button><button className={activeTab === 'calendar' ? 'selected' : ''} onClick={() => setActiveTab('calendar')}><Icon name="users" size={15} /> Calendar</button></div></div>{loadError && <div className="empty-state" style={{ color: '#b91c1c', marginBottom: 12 }}>{loadError}</div>}{activeTab === 'bookings' ? <><div className="filter-bar"><div className="search-box"><Icon name="search" size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by customer or booking ID" /></div><select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}><option value="all">All statuses</option><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select><select value={stylistFilter} onChange={(event) => setStylistFilter(event.target.value)}><option value="all">All stylists</option>{STAFF_MEMBERS.map((staff) => <option key={staff.id} value={staff.id}>{staff.name}</option>)}</select></div>{loading ? <div className="empty-state">Loading bookings from Supabase…</div> : <BookingTable bookings={filteredBookings} onStatus={updateStatus} onReschedule={setRescheduleId} />}</> : <CalendarView selectedDate={selectedDate} setSelectedDate={setSelectedDate} bookings={bookings} onReschedule={setRescheduleId} />}</section>}
       </div>
